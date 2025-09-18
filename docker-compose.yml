@@ -9,6 +9,14 @@ services:
       MSSQL_PID: "Developer"
     ports: ["1433:1433"]
     volumes:
-      - mssql_data:/var/opt/mssql/database
-volumes:
-  mssql_data:
+      - ./Data:/var/opt/mssql
+  mssql-tools:
+    image: mcr.microsoft.com/mssql-tools
+    container_name: sqlcmd-client
+    depends_on:
+      - mssql
+    entrypoint: [ "/bin/bash" ]
+    tty: true
+    # chia sẻ network với mssql để kết nối dễ hơn
+    networks:
+      - default
