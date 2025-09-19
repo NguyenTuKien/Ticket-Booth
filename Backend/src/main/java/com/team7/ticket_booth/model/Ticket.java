@@ -3,8 +3,8 @@ package com.team7.ticket_booth.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

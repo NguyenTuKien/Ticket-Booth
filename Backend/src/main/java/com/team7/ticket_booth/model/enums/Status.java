@@ -7,6 +7,7 @@ public enum Status {
     PENDING ("Đang chờ"),
     SUCCESS ("Thành công"),
     FAILED ("Thất bại"),
+    PAID ("Đã thanh toán"),
     REFUNDED ("Đã hoàn tiền"),
     CANCELED ("Đã bị hủy");
 
