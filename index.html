@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinemaHub - Đặt vé xem phim online</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1><i class="fas fa-film"></i> CinemaHub</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Trang chủ</a></li>
+                    <li><a href="#movies">Phim</a></li>
+                    <li><a href="#theaters">Rạp</a></li>
+                    <li><a href="#promotion">Khuyến mãi</a></li>
+                    <li><a href="cart.html" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a></li>
+                    <li><a href="login.html" class="login-btn">Đăng nhập</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Trải nghiệm điện ảnh tuyệt vời</h1>
+            <p>Đặt vé xem phim online nhanh chóng và tiện lợi</p>
+            <a href="#movies" class="cta-btn">Xem phim ngay</a>
+        </div>
+        <div class="hero-image">
+            <div class="movie-poster-showcase">
+                <div class="poster-card">🎬</div>
+                <div class="poster-card">🎭</div>
+                <div class="poster-card">🎪</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Movies Section -->
+    <section id="movies" class="movies-section">
+        <div class="container">
+            <h2 class="section-title">Phim đang chiếu</h2>
+            <div class="movies-grid">
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-placeholder">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="movie-info">
+                            <h3>Avengers: Endgame</h3>
+                            <p class="genre">Hành động, Khoa học viễn tưởng</p>
+                            <p class="duration">181 phút</p>
+                            <p class="rating">⭐ 8.4/10</p>
+                            <button class="book-btn" onclick="bookMovie('Avengers: Endgame', 150000)">
+                                Đặt vé - 150.000đ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-placeholder">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="movie-info">
+                            <h3>Spider-Man: No Way Home</h3>
+                            <p class="genre">Hành động, Phiêu lưu</p>
+                            <p class="duration">148 phút</p>
+                            <p class="rating">⭐ 8.2/10</p>
+                            <button class="book-btn" onclick="bookMovie('Spider-Man: No Way Home', 140000)">
+                                Đặt vé - 140.000đ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-placeholder">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="movie-info">
+                            <h3>The Batman</h3>
+                            <p class="genre">Hành động, Tội phạm</p>
+                            <p class="duration">176 phút</p>
+                            <p class="rating">⭐ 7.8/10</p>
+                            <button class="book-btn" onclick="bookMovie('The Batman', 135000)">
+                                Đặt vé - 135.000đ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-placeholder">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="movie-info">
+                            <h3>Top Gun: Maverick</h3>
+                            <p class="genre">Hành động, Drama</p>
+                            <p class="duration">130 phút</p>
+                            <p class="rating">⭐ 8.3/10</p>
+                            <button class="book-btn" onclick="bookMovie('Top Gun: Maverick', 145000)">
+                                Đặt vé - 145.000đ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-placeholder">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="movie-info">
+                            <h3>Doctor Strange 2</h3>
+                            <p class="genre">Hành động, Phép thuật</p>
+                            <p class="duration">126 phút</p>
+                            <p class="rating">⭐ 7.0/10</p>
+                            <button class="book-btn" onclick="bookMovie('Doctor Strange 2', 130000)">
+                                Đặt vé - 130.000đ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-placeholder">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="movie-info">
+                            <h3>Minions: The Rise of Gru</h3>
+                            <p class="genre">Hoạt hình, Gia đình</p>
+                            <p class="duration">87 phút</p>
+                            <p class="rating">⭐ 6.5/10</p>
+                            <button class="book-btn" onclick="bookMovie('Minions: The Rise of Gru', 120000)">
+                                Đặt vé - 120.000đ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Theaters Section -->
+    <section id="theaters" class="theaters-section">
+        <div class="container">
+            <h2 class="section-title">Hệ thống rạp</h2>
+            <div class="theaters-grid">
+                <div class="theater-card">
+                    <h3>CinemaHub Vincom Đồng Khởi</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 72 Lê Thánh Tôn, Quận 1, TP.HCM</p>
+                    <p><i class="fas fa-phone"></i> (028) 3825 1234</p>
+                </div>
+                <div class="theater-card">
+                    <h3>CinemaHub Crescent Mall</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 101 Tôn Dật Tiên, Quận 7, TP.HCM</p>
+                    <p><i class="fas fa-phone"></i> (028) 5413 1234</p>
+                </div>
+                <div class="theater-card">
+                    <h3>CinemaHub Hà Nội Center</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 56 Nguyễn Chí Thanh, Quận Đống Đa, Hà Nội</p>
+                    <p><i class="fas fa-phone"></i> (024) 3772 1234</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promotion Section -->
+    <section id="promotion" class="promotion-section">
+        <div class="container">
+            <h2 class="section-title">Khuyến mãi</h2>
+            <div class="promotion-grid">
+                <div class="promotion-card">
+                    <h3>🎉 Giảm 20% vé cuối tuần</h3>
+                    <p>Áp dụng cho tất cả suất chiếu thứ 7, chủ nhật</p>
+                    <span class="promo-code">Mã: WEEKEND20</span>
+                </div>
+                <div class="promotion-card">
+                    <h3>👥 Combo gia đình</h3>
+                    <p>Mua 4 vé tặng 1 combo bắp nước</p>
+                    <span class="promo-code">Mã: FAMILY4</span>
+                </div>
+                <div class="promotion-card">
+                    <h3>🍿 Happy Hour</h3>
+                    <p>Giảm 30% suất chiếu trước 18h</p>
+                    <span class="promo-code">Mã: HAPPY30</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CinemaHub</h3>
+                    <p>Trải nghiệm điện ảnh tuyệt vời nhất</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết</h4>
+                    <ul>
+                        <li><a href="#home">Trang chủ</a></li>
+                        <li><a href="#movies">Phim</a></li>
+                        <li><a href="#theaters">Rạp</a></li>
+                        <li><a href="#promotion">Khuyến mãi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Chính sách</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên hệ</h4>
+                    <p><i class="fas fa-phone"></i> 1900 1234</p>
+                    <p><i class="fas fa-envelope"></i> info@cinemahub.vn</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CinemaHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

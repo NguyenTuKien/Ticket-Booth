@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng - CinemaHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <a href="index.html">
+                        <h1><i class="fas fa-film"></i> CinemaHub</h1>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="index.html#movies">Phim</a></li>
+                    <li><a href="index.html#theaters">Rạp</a></li>
+                    <li><a href="index.html#promotion">Khuyến mãi</a></li>
+                    <li><a href="cart.html" class="cart-icon active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a></li>
+                    <li><a href="login.html" class="login-btn">Đăng nhập</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Cart Section -->
+    <section class="cart-section">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-shopping-cart"></i> Giỏ hàng của bạn</h1>
+                <p>Xem lại các vé phim bạn đã chọn</p>
+            </div>
+
+            <div class="cart-content">
+                <!-- Cart Items -->
+                <div class="cart-items">
+                    <div id="empty-cart" class="empty-cart">
+                        <i class="fas fa-shopping-cart empty-icon"></i>
+                        <h3>Giỏ hàng của bạn đang trống</h3>
+                        <p>Hãy chọn phim yêu thích và đặt vé ngay!</p>
+                        <a href="index.html#movies" class="continue-shopping">Tiếp tục mua sắm</a>
+                    </div>
+
+                    <div id="cart-list" class="cart-list" style="display: none;">
+                        <!-- Cart items will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary" id="cart-summary" style="display: none;">
+                    <div class="summary-card">
+                        <h3>Tóm tắt đơn hàng</h3>
+                        
+                        <div class="summary-row">
+                            <span>Tổng vé:</span>
+                            <span id="total-tickets">0</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Tạm tính:</span>
+                            <span id="subtotal">0đ</span>
+                        </div>
+                        
+                        <div class="promo-code">
+                            <h4>Mã khuyến mãi</h4>
+                            <div class="promo-input">
+                                <input type="text" id="promo-code" placeholder="Nhập mã khuyến mãi">
+                                <button onclick="applyPromo()">Áp dụng</button>
+                            </div>
+                            <div id="promo-message" class="promo-message"></div>
+                        </div>
+                        
+                        <div class="summary-row discount" id="discount-row" style="display: none;">
+                            <span>Giảm giá:</span>
+                            <span id="discount-amount">0đ</span>
+                        </div>
+                        
+                        <div class="summary-row total">
+                            <span>Tổng cộng:</span>
+                            <span id="total-amount">0đ</span>
+                        </div>
+                        
+                        <button class="checkout-btn" onclick="proceedToCheckout()">
+                            <i class="fas fa-credit-card"></i>
+                            Tiến hành thanh toán
+                        </button>
+                        
+                        <div class="security-info">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Thanh toán an toàn và bảo mật</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Continue Shopping -->
+            <div class="continue-shopping-section">
+                <a href="index.html#movies" class="continue-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Tiếp tục chọn phim
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Movies -->
+    <section class="related-movies">
+        <div class="container">
+            <h2>Có thể bạn quan tâm</h2>
+            <div class="movies-slider">
+                <div class="movie-card-small">
+                    <div class="movie-poster-small">🎬</div>
+                    <h4>Black Panther</h4>
+                    <p>140.000đ</p>
+                    <button onclick="bookMovie('Black Panther', 140000)">Đặt vé</button>
+                </div>
+                <div class="movie-card-small">
+                    <div class="movie-poster-small">🎭</div>
+                    <h4>Dune</h4>
+                    <p>135.000đ</p>
+                    <button onclick="bookMovie('Dune', 135000)">Đặt vé</button>
+                </div>
+                <div class="movie-card-small">
+                    <div class="movie-poster-small">🎪</div>
+                    <h4>No Time to Die</h4>
+                    <p>150.000đ</p>
+                    <button onclick="bookMovie('No Time to Die', 150000)">Đặt vé</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CinemaHub</h3>
+                    <p>Trải nghiệm điện ảnh tuyệt vời nhất</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết</h4>
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="index.html#movies">Phim</a></li>
+                        <li><a href="index.html#theaters">Rạp</a></li>
+                        <li><a href="index.html#promotion">Khuyến mãi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Chính sách</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên hệ</h4>
+                    <p><i class="fas fa-phone"></i> 1900 1234</p>
+                    <p><i class="fas fa-envelope"></i> info@cinemahub.vn</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CinemaHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

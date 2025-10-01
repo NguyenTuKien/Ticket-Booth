@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - CinemaHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <a href="index.html">
+                        <h1><i class="fas fa-film"></i> CinemaHub</h1>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="index.html#movies">Phim</a></li>
+                    <li><a href="index.html#theaters">Rạp</a></li>
+                    <li><a href="index.html#promotion">Khuyến mãi</a></li>
+                    <li><a href="cart.html" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a></li>
+                    <li><a href="login.html" class="login-btn">Đăng nhập</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Checkout Section -->
+    <section class="checkout-section">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-credit-card"></i> Thanh toán</h1>
+                <div class="checkout-steps">
+                    <div class="step active">
+                        <span class="step-number">1</span>
+                        <span class="step-title">Thông tin</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-title">Thanh toán</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-title">Hoàn tất</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-content">
+                <!-- Checkout Form -->
+                <div class="checkout-form">
+                    <!-- Customer Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Thông tin khách hàng</h3>
+                        <form id="checkout-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customer-name">Họ và tên *</label>
+                                    <input type="text" id="customer-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="customer-phone">Số điện thoại *</label>
+                                    <input type="tel" id="customer-phone" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-email">Email *</label>
+                                <input type="email" id="customer-email" required>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Seat Selection -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-couch"></i> Chọn ghế</h3>
+                        <div class="seat-selection">
+                            <div class="screen">
+                                <div class="screen-label">Màn hình</div>
+                            </div>
+                            <div class="seat-map">
+                                <div class="seat-row">
+                                    <span class="row-label">A</span>
+                                    <div class="seats">
+                                        <div class="seat available" data-seat="A1" onclick="selectSeat(this)">1</div>
+                                        <div class="seat available" data-seat="A2" onclick="selectSeat(this)">2</div>
+                                        <div class="seat occupied" data-seat="A3">3</div>
+                                        <div class="seat available" data-seat="A4" onclick="selectSeat(this)">4</div>
+                                        <div class="seat available" data-seat="A5" onclick="selectSeat(this)">5</div>
+                                        <div class="seat available" data-seat="A6" onclick="selectSeat(this)">6</div>
+                                        <div class="seat occupied" data-seat="A7">7</div>
+                                        <div class="seat available" data-seat="A8" onclick="selectSeat(this)">8</div>
+                                    </div>
+                                </div>
+                                <div class="seat-row">
+                                    <span class="row-label">B</span>
+                                    <div class="seats">
+                                        <div class="seat available" data-seat="B1" onclick="selectSeat(this)">1</div>
+                                        <div class="seat available" data-seat="B2" onclick="selectSeat(this)">2</div>
+                                        <div class="seat available" data-seat="B3" onclick="selectSeat(this)">3</div>
+                                        <div class="seat available" data-seat="B4" onclick="selectSeat(this)">4</div>
+                                        <div class="seat available" data-seat="B5" onclick="selectSeat(this)">5</div>
+                                        <div class="seat available" data-seat="B6" onclick="selectSeat(this)">6</div>
+                                        <div class="seat available" data-seat="B7" onclick="selectSeat(this)">7</div>
+                                        <div class="seat available" data-seat="B8" onclick="selectSeat(this)">8</div>
+                                    </div>
+                                </div>
+                                <div class="seat-row">
+                                    <span class="row-label">C</span>
+                                    <div class="seats">
+                                        <div class="seat available" data-seat="C1" onclick="selectSeat(this)">1</div>
+                                        <div class="seat occupied" data-seat="C2">2</div>
+                                        <div class="seat occupied" data-seat="C3">3</div>
+                                        <div class="seat available" data-seat="C4" onclick="selectSeat(this)">4</div>
+                                        <div class="seat available" data-seat="C5" onclick="selectSeat(this)">5</div>
+                                        <div class="seat available" data-seat="C6" onclick="selectSeat(this)">6</div>
+                                        <div class="seat available" data-seat="C7" onclick="selectSeat(this)">7</div>
+                                        <div class="seat available" data-seat="C8" onclick="selectSeat(this)">8</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="seat-legend">
+                                <div class="legend-item">
+                                    <div class="seat available"></div>
+                                    <span>Còn trống</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="seat selected"></div>
+                                    <span>Đã chọn</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="seat occupied"></div>
+                                    <span>Đã bán</span>
+                                </div>
+                            </div>
+                            <div class="selected-seats">
+                                <h4>Ghế đã chọn:</h4>
+                                <div id="selected-seats-list">Chưa chọn ghế nào</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-credit-card"></i> Phương thức thanh toán</h3>
+                        <div class="payment-methods">
+                            <div class="payment-method">
+                                <input type="radio" id="credit-card" name="payment" value="credit-card" checked>
+                                <label for="credit-card">
+                                    <i class="fas fa-credit-card"></i>
+                                    Thẻ tín dụng/ghi nợ
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="momo" name="payment" value="momo">
+                                <label for="momo">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    Ví MoMo
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="vnpay" name="payment" value="vnpay">
+                                <label for="vnpay">
+                                    <i class="fas fa-university"></i>
+                                    VNPay
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="banking" name="payment" value="banking">
+                                <label for="banking">
+                                    <i class="fas fa-landmark"></i>
+                                    Chuyển khoản ngân hàng
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Credit Card Form -->
+                        <div id="credit-card-form" class="payment-form">
+                            <div class="form-row">
+                                <div class="form-group full-width">
+                                    <label for="card-number">Số thẻ</label>
+                                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="card-name">Tên chủ thẻ</label>
+                                    <input type="text" id="card-name" placeholder="NGUYEN VAN A">
+                                </div>
+                                <div class="form-group">
+                                    <label for="card-expiry">Ngày hết hạn</label>
+                                    <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="card-cvv">CVV</label>
+                                    <input type="text" id="card-cvv" placeholder="123" maxlength="3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <div class="summary-card">
+                        <h3>Thông tin đặt vé</h3>
+                        
+                        <div id="order-items" class="order-items">
+                            <!-- Order items will be displayed here -->
+                        </div>
+                        
+                        <div class="order-details">
+                            <div class="detail-row">
+                                <span>Rạp:</span>
+                                <span>CinemaHub Vincom Đồng Khởi</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Ngày chiếu:</span>
+                                <span id="show-date">Hôm nay</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Giờ chiếu:</span>
+                                <span id="show-time">19:30</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Phòng:</span>
+                                <span>Phòng 1</span>
+                            </div>
+                        </div>
+                        
+                        <div class="price-breakdown">
+                            <div class="price-row">
+                                <span>Tạm tính:</span>
+                                <span id="checkout-subtotal">0đ</span>
+                            </div>
+                            <div class="price-row" id="checkout-discount" style="display: none;">
+                                <span>Giảm giá:</span>
+                                <span id="checkout-discount-amount">0đ</span>
+                            </div>
+                            <div class="price-row total">
+                                <span>Tổng cộng:</span>
+                                <span id="checkout-total">0đ</span>
+                            </div>
+                        </div>
+                        
+                        <button class="pay-btn" onclick="processPayment()">
+                            <i class="fas fa-lock"></i>
+                            Thanh toán an toàn
+                        </button>
+                        
+                        <div class="security-badges">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Được bảo vệ bởi SSL 256-bit</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Đặt vé thành công!</h2>
+            <p>Cảm ơn bạn đã chọn CinemaHub. Vé của bạn đã được gửi qua email.</p>
+            <div class="ticket-info">
+                <h4>Thông tin vé:</h4>
+                <div id="ticket-details"></div>
+            </div>
+            <button class="modal-btn" onclick="goToHome()">Về trang chủ</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CinemaHub</h3>
+                    <p>Trải nghiệm điện ảnh tuyệt vời nhất</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết</h4>
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="index.html#movies">Phim</a></li>
+                        <li><a href="index.html#theaters">Rạp</a></li>
+                        <li><a href="index.html#promotion">Khuyến mãi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Chính sách</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên hệ</h4>
+                    <p><i class="fas fa-phone"></i> 1900 1234</p>
+                    <p><i class="fas fa-envelope"></i> info@cinemahub.vn</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CinemaHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>
