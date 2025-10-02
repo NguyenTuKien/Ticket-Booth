@@ -21,4 +21,14 @@ public enum Shift {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+
+    public static Shift findByBeginTime(LocalTime time) {
+        for (Shift shift : values()) {
+            if (shift.getStartTime().equals(time)) {
+                return shift;
+            }
+        }
+        throw new IllegalArgumentException("No shift found for startTime: " + time);
+    }
 }
+

@@ -28,4 +28,12 @@ public enum Genre {
         this.description = description;
     }
 
+    public static Genre findByDescription(String description) {
+        for (Genre genre : values()) {
+            if (genre.getDescription().equals(description)) {
+                return genre;
+            }
+        }
+        return null;
+    }
 }
