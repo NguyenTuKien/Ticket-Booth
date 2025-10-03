@@ -1,4 +1,14 @@
 services:
+  ticket-booth:
+    build: ./TicketBooth
+    container_name: ticket-booth
+    ports: ["8080:80"]
+    volumes:
+      - ./ticket-booth/.m2:/root/.m2
+      - ./ticket-booth/logs:/app/logs
+    networks:
+      - default
+
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: ticket-booth-db
@@ -9,7 +19,10 @@ services:
       MSSQL_PID: "Developer"
     ports: ["1433:1433"]
     volumes:
-      - ./Data:/var/opt/mssql
+      - ./Database:/var/opt/mssql
+    networks:
+      - default
+
   mssql-tools:
     image: mcr.microsoft.com/mssql-tools
     container_name: sqlcmd-client

@@ -45,9 +45,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role;
+    private Role role = Role.GUEST;
 
-    @Column(name = "createdAt", nullable = false, updatable = false)
+    @Column(name = "createdAt", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
