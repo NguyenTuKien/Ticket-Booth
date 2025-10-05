@@ -76,6 +76,32 @@ public class SeatService {
         seatRepository.deleteById(id);
     }
 
+    public List<SeatResponseDTO> getSeatsByIds(List<UUID> seatIds) {
+        List<Seat> seats = seatRepository.findAllById(seatIds);
+        return seats.stream()
+                .map(SeatResponseDTO::new)
+                .toList();
+    }
 
+    public SeatResponseDTO getSeatById(UUID seatId) {
+        Seat seat = seatRepository.findById(seatId)
+                .orElseThrow(() -> new NotFoundException("Seat not found with id: " + seatId));
+        return new SeatResponseDTO(seat);
+    }
+
+    public List<SeatResponseDTO> getAvailableSeatsForShow(UUID showId) {
+        // Lấy ghế chưa được đặt cho suất chiếu này
+        List<Seat> availableSeats = seatRepository.findAvailableSeatsForShow(showId);
+        return availableSeats.stream()
+                .map(SeatResponseDTO::new)
+                .toList();
+    }
+
+    public List<SeatResponseDTO> getBookedSeatsForShow(UUID showId) {
+        // Lấy ghế đã được đặt cho suất chiếu này
+        List<Seat> bookedSeats = seatRepository.findBookedSeatsForShow(showId);
+        return bookedSeats.stream()
+                .map(SeatResponseDTO::new)
+                .toList();
+    }
 }
-

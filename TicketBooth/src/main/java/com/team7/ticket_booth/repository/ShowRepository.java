@@ -17,11 +17,10 @@ import java.util.UUID;
 
 @Repository
 public interface ShowRepository extends JpaRepository <Show, UUID>{
-    @Query("SELECT s.shift FROM Show s WHERE s = :show")
-    List <Shift> findAllShiftsByShow(Show show);
-
     @Query("SELECT s FROM Show s ORDER BY s.showDate ASC, s.shift ASC")
     Page<Show> findAllByShowDateAndShiftAsc(Pageable pageable);
 
-    List<Show> findByShowDateAfter(LocalDate showDateAfter, Pageable pageable);
+    @Query("SELECT s FROM Show s WHERE s.movie.id = :id ORDER BY s.showDate ASC, s.shift ASC")
+    List<Show> findByMovieIdOrderByShowDateAscShiftAsc(UUID id);
+
 }

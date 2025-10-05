@@ -15,7 +15,9 @@ public class OrderRequestDTO {
     @JsonProperty("ShowId")
     private UUID showId;
     @JsonProperty("TicketIds")
-    List<UUID> ticketIds;
+    private List<UUID> ticketIds;
+    @JsonProperty("SeatIds")
+    private List<UUID> seatIds;
     @JsonProperty("Method")
     private String method;
 }

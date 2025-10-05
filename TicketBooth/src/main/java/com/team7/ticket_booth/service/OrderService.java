@@ -1,7 +1,9 @@
 package com.team7.ticket_booth.service;
 
 import com.team7.ticket_booth.dto.request.OrderRequestDTO;
+import com.team7.ticket_booth.dto.response.OrderResponseDTO;
 import com.team7.ticket_booth.dto.response.TicketResponseDTO;
+import com.team7.ticket_booth.exception.NotFoundException;
 import com.team7.ticket_booth.model.Order;
 import com.team7.ticket_booth.model.Payment;
 import com.team7.ticket_booth.model.Ticket;
@@ -10,7 +12,11 @@ import com.team7.ticket_booth.repository.OrderRepository;
 import com.team7.ticket_booth.repository.TicketRepository;
 import com.team7.ticket_booth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,11 +30,25 @@ public class OrderService {
     private final UserRepository userRepository;
     private final TicketRepository ticketRepository;
 
+    // Method gốc cho API
     public Order createOrder(OrderRequestDTO dto) {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         LocalDateTime now = LocalDateTime.now();
         return orderRepository.save(new Order(null, user, now, now, new ArrayList<Ticket>(), null));
+    }
+
+    // Method mới cho CheckoutController
+    @Transactional
+    public OrderResponseDTO createOrder(OrderRequestDTO dto, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+
+        LocalDateTime now = LocalDateTime.now();
+        Order order = new Order(null, user, now, now, new ArrayList<>(), null);
+        order = orderRepository.save(order);
+
+        return new OrderResponseDTO(order);
     }
 
     public Order updateOrderTicket(Order order, List<Ticket> tickets) {
@@ -47,8 +67,17 @@ public class OrderService {
         return ticketResponseDTOS.stream().mapToInt(TicketResponseDTO::getPrice).sum();
     }
 
-    public Order getOrderById(UUID orderId) {
-        return orderRepository.getById(orderId);
+    // Method gốc trả về entity
+    public Order getOrderEntityById(UUID orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
+    }
+
+    // Method mới trả về DTO cho CheckoutController
+    public OrderResponseDTO getOrderById(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
+        return new OrderResponseDTO(order);
     }
 
     public void deleteOrder(UUID orderId) {

@@ -23,13 +23,11 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    // Bean PasswordEncoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Bean AuthenticationManager (bắt buộc từ Spring Security 5.7+)
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
@@ -39,23 +37,38 @@ public class SecurityConfig {
                 .build();
     }
 
-    // Bean SecurityFilterChain
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
-                .csrf(csrf -> csrf.disable()) // tắt CSRF cho API
+                .csrf(csrf -> csrf.disable()) // tắt CSRF cho API và form login
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1").permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll()   // public
-                        .requestMatchers("/api/v1/movies/**").permitAll()
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // cần ADMIN
-                        .anyRequest().authenticated()                     // các request khác phải login
+                        // Form login và public pages
+                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**", "/detail/**").permitAll()
+                        // API public
+                        .requestMatchers("/api/v1/auth/**", "/api/v1/movies/**").permitAll()
+                        // Admin API
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        // Các request khác cần login
+                        .anyRequest().authenticated()
                 )
+                // Form login HTML
+                .formLogin(form -> form
+                        .loginPage("/login")                  // GET hiển thị form
+                        .loginProcessingUrl("/perform_login") // POST xử lý login
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error=true")
+                        .usernameParameter("username")        // field HTML
+                        .passwordParameter("password")        // field HTML
+                )
+                // Session cho form login
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );
+
+        // JWT filter chỉ áp dụng cho API
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
-

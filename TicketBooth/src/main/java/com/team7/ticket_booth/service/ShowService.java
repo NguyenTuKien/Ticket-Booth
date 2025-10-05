@@ -17,10 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +49,10 @@ public class ShowService {
         return shows;
     }
 
-    public Show getShowById(UUID id) {
-        return showRepository.findById(id)
+    public ShowResponseDTO getShowById(UUID id) {
+        Show show = showRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Show not found"));
+        return new ShowResponseDTO(show);
     }
 
     public List<ShowResponseDTO> getAllShowsOrderByTime(int page) {
@@ -63,5 +62,29 @@ public class ShowService {
             throw new RequestException("No shows found");
         }
         return shows.stream().map(ShowResponseDTO::new).toList();
+    }
+
+    public List<ShowResponseDTO> getShowsByMovieId(UUID id) {
+        List<Show> shows = showRepository.findByMovieIdOrderByShowDateAscShiftAsc(id);
+        if (shows.isEmpty()) {
+            throw new RequestException("No shows found for this movie");
+        }
+        return shows.stream().map(ShowResponseDTO::new).toList();
+    }
+
+    public Map<LocalDate, Map<String, List<ShowResponseDTO>>> getGroupedShowsByMovieId(UUID movieId) {
+        List<ShowResponseDTO> shows = getShowsByMovieId(movieId);
+        return shows.stream()
+                .sorted(Comparator.comparing(ShowResponseDTO::getShowDate)
+                        .thenComparing(ShowResponseDTO::getStartTime))
+                .collect(Collectors.groupingBy(
+                        ShowResponseDTO::getShowDate,
+                        TreeMap::new,
+                        Collectors.groupingBy(
+                                ShowResponseDTO::getHallName,
+                                TreeMap::new,
+                                Collectors.toList()
+                        )
+                ));
     }
 }

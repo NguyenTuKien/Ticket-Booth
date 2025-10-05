@@ -24,6 +24,9 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
     @Query("SELECT m FROM Movie m WHERE :currentDate BETWEEN m.beginDay AND m.endDay")
     Page<Movie> findCurrentlyShowingMovies(@Param("currentDate") LocalDate currentDate, Pageable pageable);
 
+    @Query("SELECT m FROM Movie m WHERE :currentDate < m.beginDay")
+    Page<Movie> findComingShowingMovies(@Param("currentDate") LocalDate currentDate, Pageable pageable);
+            
     @Query("SELECT m FROM Movie m WHERE :currentDate > m.endDay")
     List<Movie> findMoviesEndedBefore(@Param("currentDate") LocalDate currentDate);
 

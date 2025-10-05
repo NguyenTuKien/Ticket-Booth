@@ -19,4 +19,16 @@ public interface SeatRepository extends JpaRepository<Seat, UUID> {
     List<Seat> findByHallId(UUID hallId);
 
     Optional<Seat> findByPosition(String position);
+
+    // Tìm ghế có sẵn cho suất chiếu (ghế chưa có vé được đặt)
+    @Query("SELECT s FROM Seat s WHERE s.hall.id = " +
+           "(SELECT sh.hall.id FROM Show sh WHERE sh.id = :showId) " +
+           "AND s.id NOT IN " +
+           "(SELECT t.seat.id FROM Ticket t WHERE t.show.id = :showId AND t.order IS NOT NULL)")
+    List<Seat> findAvailableSeatsForShow(@Param("showId") UUID showId);
+
+    // Tìm ghế đã được đặt cho suất chiếu
+    @Query("SELECT s FROM Seat s WHERE s.id IN " +
+           "(SELECT t.seat.id FROM Ticket t WHERE t.show.id = :showId AND t.order IS NOT NULL)")
+    List<Seat> findBookedSeatsForShow(@Param("showId") UUID showId);
 }

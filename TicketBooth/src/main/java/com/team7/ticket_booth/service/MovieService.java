@@ -2,6 +2,7 @@ package com.team7.ticket_booth.service;
 
 import com.team7.ticket_booth.dto.request.MovieRequestDTO;
 import com.team7.ticket_booth.dto.response.MovieResponseDTO;
+import com.team7.ticket_booth.dto.response.ShowResponseDTO;
 import com.team7.ticket_booth.exception.NotFoundException;
 import com.team7.ticket_booth.exception.RequestException;
 import com.team7.ticket_booth.model.Movie;
@@ -64,10 +65,17 @@ public class MovieService {
         return movies.getContent().stream().map(MovieResponseDTO::new).toList();
     }
 
-    public List<MovieResponseDTO> getExistingMovies(int page) {
+    public List<MovieResponseDTO> getCurrentMovies(int page) {
         LocalDate currentDate = LocalDate.now();
         Pageable pageable = PageRequest.of(page, 20);
         Page<Movie> movies = movieRepository.findCurrentlyShowingMovies(currentDate, pageable);
+        return movies.getContent().stream().map(MovieResponseDTO::new).toList();
+    }
+
+    public List<MovieResponseDTO> getUpcomingMovies(int page) {
+        LocalDate currentDate = LocalDate.now();
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<Movie> movies = movieRepository.findComingShowingMovies(currentDate, pageable);
         return movies.getContent().stream().map(MovieResponseDTO::new).toList();
     }
 
@@ -112,4 +120,5 @@ public class MovieService {
         if(movies.isEmpty()) return;
         movieRepository.deleteAll(movies);
     }
+
 }

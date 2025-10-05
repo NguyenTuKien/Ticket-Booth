@@ -11,10 +11,13 @@ public class SeatResponseDTO {
     private UUID id;
     private String position;
     private SeatType seatType;
+    private Double price;
 
     public SeatResponseDTO(Seat seat) {
         this.id = seat.getId();
         this.position = seat.getPosition();
         this.seatType = seat.getSeatType();
+        // Tạm thời set price mặc định, có thể cần tính toán từ Price entity
+        this.price = 100000.0; // Giá mặc định
     }
 }

@@ -2,7 +2,9 @@ package com.team7.ticket_booth.facade;
 
 import com.team7.ticket_booth.dto.request.OrderRequestDTO;
 import com.team7.ticket_booth.dto.request.PaymentRequestDTO;
+import com.team7.ticket_booth.dto.response.OrderResponseDTO;
 import com.team7.ticket_booth.dto.response.PaymentResponseDTO;
+import com.team7.ticket_booth.dto.response.ShowResponseDTO;
 import com.team7.ticket_booth.model.Order;
 import com.team7.ticket_booth.model.Payment;
 import com.team7.ticket_booth.model.Show;
@@ -27,7 +29,7 @@ public class BookingFacade {
 
     @Transactional
     public PaymentResponseDTO orderTickets(OrderRequestDTO dto) {
-        Show show = showService.getShowById(dto.getShowId());
+        ShowResponseDTO show = showService.getShowById(dto.getShowId());
         User user = authService.getUserById(dto.getUserId());
         Order order = orderService.createOrder(dto);
         for (UUID ticketId : dto.getTicketIds()) {
@@ -44,7 +46,7 @@ public class BookingFacade {
 
 
     public void cancelOrder(UUID orderId) {
-        Order order = orderService.getOrderById(orderId);
+        OrderResponseDTO order = orderService.getOrderById(orderId);
         for (var ticket : order.getTickets()) {
             ticketService.resetTicket(ticket.getId());
         }
