@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // tắt CSRF cho API và form login
                 .authorizeHttpRequests(auth -> auth
                         // Form login và public pages
-                        .requestMatchers("/", "/home", "/login", "/css/**", "/js/**", "/images/**", "/detail/**").permitAll()
+                        .requestMatchers("/", "/home", "/login", "/signup", "/css/**", "/js/**", "/images/**", "/movie").permitAll()
                         // API public
                         .requestMatchers("/api/v1/auth/**", "/api/v1/movies/**").permitAll()
                         // Admin API

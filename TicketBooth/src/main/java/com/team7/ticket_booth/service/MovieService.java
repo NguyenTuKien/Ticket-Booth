@@ -65,15 +65,13 @@ public class MovieService {
         return movies.getContent().stream().map(MovieResponseDTO::new).toList();
     }
 
-    public List<MovieResponseDTO> getCurrentMovies(int page) {
-        LocalDate currentDate = LocalDate.now();
+    public List<MovieResponseDTO> getCurrentMovies(LocalDate currentDate, int page) {
         Pageable pageable = PageRequest.of(page, 20);
         Page<Movie> movies = movieRepository.findCurrentlyShowingMovies(currentDate, pageable);
         return movies.getContent().stream().map(MovieResponseDTO::new).toList();
     }
 
-    public List<MovieResponseDTO> getUpcomingMovies(int page) {
-        LocalDate currentDate = LocalDate.now();
+    public List<MovieResponseDTO> getUpcomingMovies( LocalDate currentDate, int page) {
         Pageable pageable = PageRequest.of(page, 20);
         Page<Movie> movies = movieRepository.findComingShowingMovies(currentDate, pageable);
         return movies.getContent().stream().map(MovieResponseDTO::new).toList();
@@ -113,6 +111,7 @@ public class MovieService {
         if(!movieRepository.existsById(id)) throw new NotFoundException("Movie not found");
         movieRepository.deleteById(id);
     }
+
     @Transactional
     public void refreshMovies(){
         LocalDate currentDate = LocalDate.now();

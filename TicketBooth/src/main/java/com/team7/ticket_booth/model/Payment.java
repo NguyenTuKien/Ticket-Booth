@@ -30,11 +30,11 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "method", nullable = false)
-    private Method Method;
+    private Method method;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status Status;
+    private Status status;
 
     // Mã giao dịch do provider trả về (VNPay, Momo, Paypal...)
     @Column(name = "provider_txn_id")

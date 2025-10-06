@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum Method  {
     CASH("Tiền mặt"),
-    BANK_TRANSFER("Chuyển khoản");
+    BANK("Chuyển khoản ngân hàng"),
+    CARD("Thẻ tín dụng/ghi nợ");
 
     private final String description;
 

@@ -9,6 +9,9 @@ import com.team7.ticket_booth.model.enums.Shift;
 import com.team7.ticket_booth.repository.*;
 import com.team7.ticket_booth.dto.response.TicketResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,10 +59,17 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
+    public List<TicketResponseDTO> getTicketByShowId(UUID id) {
+        List<Ticket> tickets = ticketRepository.findByShowId(id);
+        if(tickets.isEmpty()) throw new NotFoundException("No tickets found for show id: " + id);
+        return tickets.stream().map(TicketResponseDTO::new).toList();
+    }
+
     public List<TicketResponseDTO> getUnorderedTicketsByShowId(UUID id){
         if(!showRepository.existsById(id)) throw new NotFoundException("Show not found with id: " + id);
-        List<Ticket> tickets = ticketRepository.findUnorderedTicketsByShowId(id);
+        List<Ticket> tickets = ticketRepository.findAvailableTickets(id);
         if(tickets.isEmpty()) throw new RequestException("No unordered tickets found for show id: " + id);
         return tickets.stream().map(TicketResponseDTO::new).toList();
     }
+
 }

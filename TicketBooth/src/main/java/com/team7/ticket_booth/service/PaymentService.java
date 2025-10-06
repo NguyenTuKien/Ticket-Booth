@@ -8,10 +8,12 @@ import com.team7.ticket_booth.model.enums.Status;
 import com.team7.ticket_booth.repository.OrderRepository;
 import com.team7.ticket_booth.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
@@ -19,10 +21,14 @@ public class PaymentService {
     private final OrderRepository orderRepository;
 
     public Payment updatePaymentMethod(Payment payment, Method method) {
-        if(Method.CASH.equals(method)) {
-            payment.setMethod(Method.CASH);
+        if(Method.CARD.equals(method)) {
+            payment.setMethod(Method.CARD);
+            payment.setStatus(Status.PENDING);
+        } else if(Method.BANK.equals(method)) {
+            payment.setMethod(Method.BANK);
+            payment.setStatus(Status.PENDING);
         } else {
-            payment.setMethod(Method.BANK_TRANSFER);
+            payment.setMethod(Method.CASH);
             payment.setStatus(Status.PENDING);
         }
         return paymentRepository.save(payment);
@@ -34,16 +40,22 @@ public class PaymentService {
     }
 
     public Payment createPayment(PaymentRequestDTO dto) {
-        Order order = orderRepository.findById(dto.getOrderId()).
-                orElseThrow(() -> new RuntimeException("Order not found with id: " + dto.getOrderId()));
-        Method method = Method.findByDescription(dto.getMethod());
-        LocalDateTime now = LocalDateTime.now();
-        Payment payment = new Payment(null, order, Method.CASH, Status.PENDING,
-                null, null, now, now);
-        if(method != Method.CASH) {
-            payment = updatePaymentMethod(payment, method);
+        Order order = orderRepository.findById(dto.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + dto.getOrderId()));
+
+        Method method = dto.getMethod();
+        if (method == null) {
+            log.warn("Payment method null từ request, fallback về CASH. DTO raw: {}", dto);
+            method = Method.CASH; // fallback để không vi phạm NOT NULL & tránh constraint sai
         }
+        log.debug("Persist payment với method enum tên='{}'", method.name());
+
+        Payment payment = Payment.builder()
+                .order(order)
+                .method(method)
+                .status(Status.PENDING)
+                .build();
+
         return paymentRepository.save(payment);
     }
-
 }

@@ -1,6 +1,7 @@
 package com.team7.ticket_booth.service;
 
 import com.team7.ticket_booth.dto.request.ShowRequestDTO;
+import com.team7.ticket_booth.dto.response.MovieResponseDTO;
 import com.team7.ticket_booth.dto.response.ShowResponseDTO;
 import com.team7.ticket_booth.exception.NotFoundException;
 import com.team7.ticket_booth.exception.RequestException;
@@ -53,6 +54,13 @@ public class ShowService {
         Show show = showRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Show not found"));
         return new ShowResponseDTO(show);
+    }
+
+    public MovieResponseDTO getMovieByShowId(UUID id) {
+        Show show = showRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Show not found"));
+        Movie movie = show.getMovie();
+        return new MovieResponseDTO(movie);
     }
 
     public List<ShowResponseDTO> getAllShowsOrderByTime(int page) {

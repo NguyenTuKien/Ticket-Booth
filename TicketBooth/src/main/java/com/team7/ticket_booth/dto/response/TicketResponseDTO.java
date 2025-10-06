@@ -17,6 +17,7 @@ public class TicketResponseDTO {
     private Shift shift;
     private String hallName;
     private UUID orderCode;
+    private SeatType seatType;
 
     public TicketResponseDTO(Ticket ticket){
         this.id = ticket.getId();
@@ -27,5 +28,6 @@ public class TicketResponseDTO {
         this.shift = Shift.valueOf(ticket.getShow().getShift().toString());
         this.hallName = ticket.getShow().getHall().getName();
         this.orderCode = (ticket.getOrder() != null) ? ticket.getOrder().getId() : null;
+        this.seatType = ticket.getSeat().getSeatType();
     }
 }
