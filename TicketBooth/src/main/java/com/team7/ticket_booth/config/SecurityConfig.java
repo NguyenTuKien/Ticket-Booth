@@ -47,7 +47,7 @@ public class SecurityConfig {
                         // Form login và public pages
                         .requestMatchers("/", "/home", "/login", "/signup", "/css/**", "/js/**", "/images/**", "/showtime", "/reservation").permitAll()
                         // API public
-                        .requestMatchers("/api/v1/auth/**", "/api/v1/movies/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/api/v1/movies/**", "api/v1/prices/").permitAll()
                         // API orders và payments (cần authenticated)
                         .requestMatchers("/api/v1/orders/**", "/api/v1/payments/**").authenticated()
                         // Admin API

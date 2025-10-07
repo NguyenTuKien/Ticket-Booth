@@ -18,6 +18,8 @@ public class TicketResponseDTO {
     private String hallName;
     private UUID orderCode;
     private SeatType seatType;
+    private String showDate; // ISO date string
+    private String startTime; // derived from shift
 
     public TicketResponseDTO(Ticket ticket){
         this.id = ticket.getId();
@@ -29,5 +31,7 @@ public class TicketResponseDTO {
         this.hallName = ticket.getShow().getHall().getName();
         this.orderCode = (ticket.getOrder() != null) ? ticket.getOrder().getId() : null;
         this.seatType = ticket.getSeat().getSeatType();
+        this.showDate = ticket.getShow().getShowDate().toString();
+        this.startTime = ticket.getShow().getShift() != null ? ticket.getShow().getShift().getStartTime().toString() : null;
     }
 }

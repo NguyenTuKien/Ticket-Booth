@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Data
 @RequiredArgsConstructor
@@ -63,4 +65,7 @@ public class PriceService {
         price.setValue(price.getValue() + dto.getValue()); // Hibernate sẽ tự update khi commit
     }
 
+    public List<Price> getAllPrices() {
+        return priceRepository.findAll();
+    }
 }

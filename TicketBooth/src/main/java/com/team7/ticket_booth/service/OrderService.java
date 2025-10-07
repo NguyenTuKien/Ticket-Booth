@@ -83,4 +83,10 @@ public class OrderService {
     public void deleteOrder(UUID orderId) {
         orderRepository.deleteById(orderId);
     }
+
+    public List<Order> getOrdersSucccesByUserId(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        return orderRepository.findOrderSuccessByUser(user);
+    }
 }
