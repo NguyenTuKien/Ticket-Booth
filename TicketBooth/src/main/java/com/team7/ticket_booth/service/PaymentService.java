@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -34,7 +35,9 @@ public class PaymentService {
         return paymentRepository.save(payment);
     }
 
-    public Payment updatePaymentStatus(Payment payment, Status status) {
+    public Payment updatePaymentStatus(UUID orderId, Status status) {
+        Payment payment = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("Payment not found with order id: " + orderId));
         payment.setStatus(status);
         return paymentRepository.save(payment);
     }
@@ -58,4 +61,5 @@ public class PaymentService {
 
         return paymentRepository.save(payment);
     }
+
 }

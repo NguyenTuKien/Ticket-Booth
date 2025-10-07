@@ -42,8 +42,8 @@ public class TicketService {
         }
     }
 
-    public Ticket getTicketById(UUID id) {
-        return ticketRepository.getById(id);
+    public List <Ticket> getTicketByOrderId(UUID orderId) {
+        return ticketRepository.findByOrderId(orderId);
     }
 
     public Ticket updateTicket(UUID ticketId, UUID orderId) {

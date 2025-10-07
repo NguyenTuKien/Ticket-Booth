@@ -1,5 +1,6 @@
 package com.team7.ticket_booth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team7.ticket_booth.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "users", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"username"}),
@@ -42,6 +44,19 @@ public class User {
 
     @Column(name = "fullName", length = 100, nullable = false)
     private String fullName;
+
+    @Column(name = "cardNumber", length = 16)
+    private String cardNumber;
+
+    @Column(name = "holdersName", length = 100)
+    private String holdersName;
+
+    @Column(name = "expirationDate")
+    @Temporal(TemporalType.DATE)
+    private Date expirationDate;
+
+    @Column(name = "cvv", length = 4)
+    private String cvv;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

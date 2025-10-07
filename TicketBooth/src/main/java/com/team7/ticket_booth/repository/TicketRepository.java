@@ -26,7 +26,7 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
     LEFT JOIN t.order o
     LEFT JOIN o.payment p
     WHERE t.show.id = :showId
-      AND (o IS NULL OR p.status != 'COMPLETED')
+      AND (o IS NULL OR p.status != 'SUCCESS')
     ORDER BY t.seat.position ASC
     """)
     List<Ticket> findAvailableTickets(@Param("showId") UUID showId);

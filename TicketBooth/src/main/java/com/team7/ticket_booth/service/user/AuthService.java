@@ -1,6 +1,7 @@
 package com.team7.ticket_booth.service.user;
 
 import com.team7.ticket_booth.model.User;
+import com.team7.ticket_booth.model.enums.Role;
 import com.team7.ticket_booth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,7 +17,17 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public User register(User user) {
+        // Encode mật khẩu
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Các trường khác để null theo yêu cầu (builder không set thì mặc định đã null)
+        user.setCardNumber(null);
+        user.setHoldersName(null);
+        user.setExpirationDate(null);
+        user.setCvv(null);
+        if (user.getRole() == null) {
+            user.setRole(Role.GUEST);
+        }
+        // createdAt và updatedAt sẽ tự set bởi @CreationTimestamp / @UpdateTimestamp
         return userRepository.save(user);
     }
 
@@ -29,4 +40,3 @@ public class AuthService {
                 orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
-

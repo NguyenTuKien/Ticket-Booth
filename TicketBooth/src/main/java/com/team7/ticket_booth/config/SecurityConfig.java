@@ -30,11 +30,12 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder())
-                .and()
-                .build();
+                .passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
     }
 
     @Bean
@@ -44,9 +45,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // tắt CSRF cho API và form login
                 .authorizeHttpRequests(auth -> auth
                         // Form login và public pages
-                        .requestMatchers("/", "/home", "/login", "/signup", "/css/**", "/js/**", "/images/**", "/movie").permitAll()
+                        .requestMatchers("/", "/home", "/login", "/signup", "/css/**", "/js/**", "/images/**", "/showtime", "/reservation").permitAll()
                         // API public
                         .requestMatchers("/api/v1/auth/**", "/api/v1/movies/**").permitAll()
+                        // API orders và payments (cần authenticated)
+                        .requestMatchers("/api/v1/orders/**", "/api/v1/payments/**").authenticated()
                         // Admin API
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         // Các request khác cần login

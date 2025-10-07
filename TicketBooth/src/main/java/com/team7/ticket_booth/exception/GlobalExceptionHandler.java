@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -120,5 +121,19 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.internalServerError().body(error);
+    }
+
+    // Static resource not found (.well-known, devtools probes, etc.) – log ở mức DEBUG để tránh spam
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResource(NoResourceFoundException ex, HttpServletRequest request) {
+        // Nhiều trình duyệt / extension tự động gọi các path .well-known => không nên log ERROR
+        log.debug("Static resource not found: {}", ex.getResourcePath());
+
+        ErrorResponse error = ErrorResponse.builder(ex, HttpStatus.NOT_FOUND, "Resource not found")
+                .title("Resource Not Found")
+                .instance(URI.create(request.getRequestURI()))
+                .type(URI.create("/not-found"))
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }
