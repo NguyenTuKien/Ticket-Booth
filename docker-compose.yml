@@ -2,10 +2,16 @@ services:
   ticket-booth:
     build: ./TicketBooth
     container_name: ticket-booth
-    ports: ["8080:80"]
+    ports: ["8080:8080"]
     volumes:
       - ./ticket-booth/.m2:/root/.m2
       - ./ticket-booth/logs:/app/logs
+    depends_on:
+      - mssql
+    environment:
+      - spring.datasource.url=jdbc:sqlserver://mssql:1433;databaseName=TicketBooth;encrypt=false;trustServerCertificate=true
+      - spring.datasource.username=SA
+      - spring.datasource.password=TestAcc@1234
     networks:
       - default
 
@@ -20,6 +26,7 @@ services:
     ports: ["1433:1433"]
     volumes:
       - ./Database:/var/opt/mssql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - default
 
@@ -33,3 +40,6 @@ services:
     # chia sẻ network với mssql để kết nối dễ hơn
     networks:
       - default
+
+networks:
+  default:
