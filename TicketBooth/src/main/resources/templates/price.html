@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Bảng giá vé - TicketBooth</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/price.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<header class="header">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><a th:href="@{/}"><h1><i class="fas fa-film"></i> TicketBooth</h1></a></div>
+            <ul class="nav-menu">
+                <li><a th:href="@{/}">Trang chủ</a></li>
+                <li><a th:href="@{/price}">Giá vé</a></li>
+                <li><a th:href="@{/about}">Giới thiệu</a></li>
+                <li><a th:href="@{/my-tickets}">Vé đã đặt</a></li>
+                <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="login-btn">Đăng nhập</a></li>
+                <li sec:authorize="!isAuthenticated()"><a th:href="@{/signup}" class="signup-btn">Đăng ký</a></li>
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="logout-btn">Đăng xuất</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<section class="page-hero">
+    <div class="container">
+        <h2><i class="fas fa-ticket-alt"></i> Bảng giá vé</h2>
+        <p>Cập nhật giá theo loại ghế & khung giờ chiếu</p>
+    </div>
+</section>
+<section class="price-section">
+    <div class="container">
+        <div id="price-table" class="price-table-loading">Đang tải dữ liệu giá vé...</div>
+        <div class="price-note">
+            <p><strong>Lưu ý:</strong> Giá có thể thay đổi vào các dịp lễ, cuối tuần hoặc suất chiếu đặc biệt.</p>
+        </div>
+    </div>
+</section>
+<footer class="footer">
+    <div class="container">
+        <div class="footer-bottom"><p>&copy; 2024 TicketBooth. All rights reserved.</p></div>
+    </div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/v1/prices')
+            .then(r => r.json())
+            .then(data => renderPrices(data))
+            .catch(_ => document.getElementById('price-table').innerHTML = '<p style="color:red">Không tải được dữ liệu.</p>');
+    });
+    function renderPrices(list){
+        if(!Array.isArray(list) || list.length===0){
+            document.getElementById('price-table').innerHTML = '<p>Chưa có dữ liệu giá.</p>';return;
+        }
+        // group by seatType then shift
+        const groups = {};
+        list.forEach(p => {
+            const type = p.seatType || 'KHÁC';
+            if(!groups[type]) groups[type] = [];
+            groups[type].push(p);
+        });
+        let html = '';
+        Object.keys(groups).forEach(type => {
+            html += `<div class="price-block"><h3>${type}</h3><table class="price-table-inner"><thead><tr><th>Suất (Shift)</th><th>Giá (VNĐ)</th></tr></thead><tbody>`;
+            groups[type].forEach(p => {
+                const shift = p.shift || (p.beginTime ? p.beginTime : '');
+                html += `<tr><td>${shift}</td><td>${new Intl.NumberFormat('vi-VN').format(p.value)}</td></tr>`;
+            });
+            html += '</tbody></table></div>';
+        });
+        document.getElementById('price-table').innerHTML = html;
+    }
+</script>
+</body>
+</html>

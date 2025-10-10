@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${movie.title + ' - TicketBooth'}">Chi tiết phim - TicketBooth</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header (đồng bộ với index) -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1><i class="fas fa-film"></i> TicketBooth</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a th:href="@{/}">Trang chủ</a></li>
+                    <li><a th:href="@{/price}"><i class="fas fa-ticket-alt"></i> Giá vé</a></li>
+                    <li><a th:href="@{/about}"><i class="fas fa-circle-info"></i> Giới thiệu</a></li>
+                    <li><a th:href="@{/my-tickets}" class="tickets-btn">
+                        <i class="fas fa-ticket-alt"></i> Vé đã đặt
+                    </a></li>
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/login}" class="login-btn">Đăng nhập</a>
+                    </li>
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/signup}" class="signup-btn">Đăng ký</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()">
+                        <a th:href="@{/logout}" class="logout-btn">Đăng xuất</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb-section">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a th:href="@{/}">Trang chủ</a>
+                <span class="separator">›</span>
+                <span th:text="${movie.title}">Tên Phim</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Movie Detail Section -->
+    <section class="movie-detail-section">
+        <div class="container">
+            <div class="movie-detail-content">
+                <!-- Movie Poster -->
+                <div class="movie-poster-container">
+                    <div class="poster-wrapper">
+                        <img th:src="${movie.thumbnailUrl}" th:alt="${movie.title}" class="movie-poster-large">
+                        <!-- <div class="age-rating" th:text="${movie.ageRating}">T16</div> -->
+                    </div>
+                </div>
+
+                <!-- Movie Information -->
+                <div class="movie-info-container">
+                    <h1 class="movie-title" th:text="${movie.title}">Tên Phim</h1>
+                    
+                    <div class="movie-description" th:text="${movie.description}">
+                        Mô tả phim sẽ được hiển thị ở đây...
+                    </div>
+
+                    <div class="movie-details">
+                        <div class="detail-row">
+                            <span class="detail-label">THỂ LOẠI:</span>
+                            <span class="detail-value" th:text="${movie.genre}">Hành động</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">THỜI LƯỢNG:</span>
+                            <span class="detail-value" th:text="${movie.duration + ' phút'}">120 phút</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">NGÀY KHỞI CHIẾU:</span>
+                            <span class="detail-value" th:text="${#temporals.format(movie.beginDay, 'dd/MM/yyyy')}">19/09/2025</span>
+                        </div>
+                        <div class="detail-row" th:if="${movie.endDay != null}">
+                            <span class="detail-label">NGÀY KẾT THÚC:</span>
+                            <span class="detail-value" th:text="${#temporals.format(movie.endDay, 'dd/MM/yyyy')}">19/12/2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Showtimes Section -->
+    <section class="showtimes-section">
+        <div class="container">
+            <h2 class="section-title">Lịch chiếu phim</h2>
+            
+            <!-- Date Picker -->
+            <div th:if="${(not now.isBefore(movie.beginDay)) and (not now.isAfter(movie.endDay))}" class="date-picker-container">
+                <label for="show-date" class="date-label">
+                    <i class="far fa-calendar-alt"></i> Chọn ngày xem:
+                </label>
+                <input type="date" 
+                       id="show-date" 
+                       class="date-picker-input"
+                       th:min="${#temporals.format(now, 'yyyy-MM-dd')}"
+                       th:max="${#temporals.format(movie.endDay, 'yyyy-MM-dd')}"
+                       onchange="filterShowsByDate(this.value)">
+            </div>
+            <!-- Theater and Showtimes -->
+            <div class="theater-showtimes" th:if="${groupedShows != null and !groupedShows.isEmpty()}">
+                <!-- Loop through each date (hidden initially, shown by JS) -->
+                <div th:each="dateEntry : ${groupedShows}" 
+                     class="date-group" 
+                     th:attr="data-date=${#temporals.format(dateEntry.key, 'yyyy-MM-dd')}"
+                     style="display: none;">
+                    <!-- Loop through each hall for this date -->
+                    <div th:each="hallEntry : ${dateEntry.value}" class="theater-group">
+                        <h4 class="theater-name">
+                            <i class="fas fa-door-open"></i>
+                            <span th:text="${hallEntry.key}">Phòng chiếu 1</span>
+                        </h4>
+                        <div class="showtimes-grid">
+                            <!-- Loop through each show for this hall and date -->
+                            <button th:each="show : ${hallEntry.value}"
+                                    class="showtime-btn"
+                                    th:attr="data-id=${show.id}"
+                                    onclick="selectShowtime(this.dataset.id)">
+                                <div class="showtime-time" th:text="${#temporals.format(show.startTime, 'HH:mm')}">09:30</div>
+                                <div class="showtime-info">
+                                    <span th:text="|~ ${#temporals.format(show.endTime, 'HH:mm')}|">~ 11:45</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- No showtimes available -->
+            <div id="no-showtimes-message" class="no-showtimes" style="display: none;">
+                <i class="fas fa-calendar-times"></i>
+                <p>Không có lịch chiếu cho ngày đã chọn</p>
+            </div>
+            <!-- No data at all -->
+            <div th:if="${groupedShows == null or groupedShows.isEmpty()}" class="no-showtimes">
+                <i class="fas fa-calendar-times"></i>
+                <p>Hiện tại chưa có lịch chiếu cho phim này</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TicketBooth</h3>
+                    <p>Trải nghiệm điện ảnh tuyệt vời nhất</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Trang chủ</a></li>
+                        <li><a href="my-tickets.html">Vé đã đặt</a></li>
+                        <li><a href="login.html">Đăng nhập</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Chính sách</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên hệ</h4>
+                    <p><i class="fas fa-phone"></i> 1900 1234</p>
+                    <p><i class="fas fa-envelope"></i> info@TicketBooth.vn</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TicketBooth. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/showtime.js}"></script>
+</body>
+</html>

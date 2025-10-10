@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vé đã đặt - TicketBooth</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <a th:href="@{/}">
+                        <h1><i class="fas fa-film"></i> TicketBooth</h1>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a th:href="@{/}">Trang chủ</a></li>
+                    <li><a th:href="@{/price}">Giá vé</a></li>
+                    <li><a th:href="@{/about}">Giới thiệu</a></li>
+                    <li class="active"><a th:href="@{/my-tickets}"><i class="fas fa-ticket-alt"></i> Vé đã đặt</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="login-btn">Đăng nhập</a></li>
+                    <li sec:authorize="!isAuthenticated()"><a th:href="@{/signup}" class="signup-btn">Đăng ký</a></li>
+                    <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="logout-btn">Đăng xuất</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Bỏ thanh tìm kiếm riêng ở trang này -->
+    </header>
+
+    <!-- My Tickets Section -->
+    <section class="tickets-section">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-ticket-alt"></i> Vé đã đặt</h1>
+                <p>Quản lý và xem lại các vé bạn đã đặt</p>
+            </div>
+
+            <!-- Tickets Filter -->
+            <div class="tickets-filter">
+                <button class="filter-btn active" onclick="filterTickets('all')">Tất cả</button>
+                <button class="filter-btn" onclick="filterTickets('upcoming')">Sắp tới</button>
+                <button class="filter-btn" onclick="filterTickets('completed')">Đã xem</button>
+            </div>
+
+            <!-- Tickets List -->
+            <div class="tickets-list" id="ticketsContainer">
+                <div class="empty-tickets" th:if="${#lists.isEmpty(tickets)}">
+                    <i class="fas fa-ticket-alt"></i>
+                    <h3>Chưa có vé nào</h3>
+                    <p>Bạn chưa đặt vé nào. Hãy chọn phim và đặt vé ngay!</p>
+                    <a th:href="@{/}" class="btn-primary">Đặt vé ngay</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TicketBooth</h3>
+                    <p>Trải nghiệm điện ảnh tuyệt vời nhất</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Trang chủ</a></li>
+                        <li><a href="my-tickets.html">Vé đã đặt</a></li>
+                        <li><a href="login.html">Đăng nhập</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Chính sách</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên hệ</h4>
+                    <p><i class="fas fa-phone"></i> 1900 1234</p>
+                    <p><i class="fas fa-envelope"></i> info@TicketBooth.vn</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TicketBooth. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.myTickets = /*[[${tickets}]]*/ [];
+        /*]]>*/
+    </script>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/my-tickets.js}"></script>
+</body>
+</html>

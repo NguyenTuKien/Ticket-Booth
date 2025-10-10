@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Giới thiệu - TicketBooth</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/about.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<header class="header">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><a th:href="@{/}"><h1><i class="fas fa-film"></i> TicketBooth</h1></a></div>
+            <ul class="nav-menu">
+                <li><a th:href="@{/}">Trang chủ</a></li>
+                <li><a th:href="@{/price}">Giá vé</a></li>
+                <li><a th:href="@{/about}" class="active">Giới thiệu</a></li>
+                <li><a th:href="@{/my-tickets}">Vé đã đặt</a></li>
+                <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="login-btn">Đăng nhập</a></li>
+                <li sec:authorize="!isAuthenticated()"><a th:href="@{/signup}" class="signup-btn">Đăng ký</a></li>
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="logout-btn">Đăng xuất</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<section class="page-hero">
+    <div class="container">
+        <h2><i class="fas fa-clapperboard"></i> Về TicketBooth</h2>
+        <p>Nền tảng đặt vé xem phim thân thiện, nhanh và minh bạch</p>
+    </div>
+</section>
+<section class="about-section">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-block">
+                <h3>Sứ mệnh</h3>
+                <p>Giúp khán giả tiếp cận trải nghiệm điện ảnh mượt mà: chọn ghế trực quan, thanh toán linh hoạt và quản lý vé tập trung.</p>
+            </div>
+            <div class="about-block">
+                <h3>Điểm nổi bật</h3>
+                <ul class="feature-list">
+                    <li><i class="fas fa-bolt"></i> Tốc độ đặt vé nhanh</li>
+                    <li><i class="fas fa-chess-board"></i> Sơ đồ ghế realtime</li>
+                    <li><i class="fas fa-credit-card"></i> Đa dạng thanh toán</li>
+                    <li><i class="fas fa-ticket-alt"></i> Quản lý vé cá nhân</li>
+                    <li><i class="fas fa-lock"></i> Bảo mật thông tin</li>
+                </ul>
+            </div>
+            <div class="about-block">
+                <h3>Công nghệ</h3>
+                <p>Nền tảng xây dựng bằng Spring Boot, Thymeleaf, bảo mật với Spring Security & JWT; giao diện tối ưu trải nghiệm người dùng.</p>
+            </div>
+            <div class="about-block">
+                <h3>Tầm nhìn</h3>
+                <p>Trở thành lựa chọn hàng đầu cho rạp địa phương và người yêu phim, mở rộng thêm loyalty, review phim và gợi ý thông minh.</p>
+            </div>
+        </div>
+        <div class="cta-box">
+            <h3>Bạn đã sẵn sàng đặt vé?</h3>
+            <a th:href="@{/}" class="btn-primary"><i class="fas fa-ticket"></i> Bắt đầu ngay</a>
+        </div>
+    </div>
+</section>
+<footer class="footer">
+    <div class="container">
+        <div class="footer-bottom"><p>&copy; 2024 TicketBooth. All rights reserved.</p></div>
+    </div>
+</footer>
+</body>
+</html>

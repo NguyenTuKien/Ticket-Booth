@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - TicketBooth</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <a th:href="@{/}">
+                        <h1><i class="fas fa-film"></i> TicketBooth</h1>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a th:href="@{/}">Trang chủ</a></li>
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/login}" class="login-btn">Đăng nhập</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()">
+                        <a th:href="@{/logout}" class="logout-btn">Đăng xuất</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb-section">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a th:href="@{/}">Trang chủ</a>
+                <span class="separator">›</span>
+                <span>Thanh toán</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Checkout Section -->
+    <section class="checkout-section">
+        <div class="container">
+            <div class="checkout-layout">
+                <!-- Order Summary -->
+                <div class="order-summary-card">
+                    <h2>Thông tin đơn hàng</h2>
+                    
+                    <div class="order-info">
+                        <div class="info-row">
+                            <span class="label">Mã đơn hàng:</span>
+                            <span class="value" th:text="${payment.orderCode}">ORD123456</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Trạng thái:</span>
+                            <span class="value status" th:text="${payment.status}">Chờ thanh toán</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Số lượng vé:</span>
+                            <span class="value" th:text="${tickets.size()}">2</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Ghế:</span>
+                            <span class="value">
+                                <span th:each="ticket, iterStat : ${tickets}">
+                                    <span th:text="${ticket.seat.position}">A1</span>
+                                    <span th:if="${!iterStat.last}">, </span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="total-section">
+                        <div class="total-row">
+                            <span class="total-label">Tổng tiền:</span>
+                            <span class="total-amount" th:text="${#numbers.formatInteger(payment.cost, 0, 'COMMA') + ' VNĐ'}">200,000 VNĐ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Method Section -->
+                <div class="payment-section">
+                    <h2>Thanh toán</h2>
+                    
+                    <div class="payment-method-display">
+                        <div class="method-label">Phương thức thanh toán:</div>
+                        <div class="method-value" th:text="${payment.method}">Chuyển khoản</div>
+                    </div>
+
+                    <!-- Bank Transfer Payment -->
+                    <div th:if="${payment.method == 'Chuyển khoản ngân hàng'}" class="bank-transfer-payment">
+                        <div class="payment-card">
+                            <h3><i class="fas fa-university"></i> Thông tin chuyển khoản</h3>
+                            
+                            <div class="qr-code-container">
+                                <div class="qr-code">
+                                    <img th:src="${payment.url}" 
+                                         alt="QR Code thanh toán" 
+                                         onerror="this.src='/images/qr-placeholder.png'">
+                                </div>
+                                <p class="qr-instruction">Quét mã QR để thanh toán</p>
+                            </div>
+
+                            <div class="bank-info">
+                                <div class="bank-detail">
+                                    <span class="bank-label">Ngân hàng:</span>
+                                    <span class="bank-value">MB Bank</span>
+                                </div>
+                                <div class="bank-detail">
+                                    <span class="bank-label">Số tài khoản:</span>
+                                    <span class="bank-value">0123456789</span>
+                                    <button class="copy-btn" onclick="copyToClipboard('0123456789')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="bank-detail">
+                                    <span class="bank-label">Chủ tài khoản:</span>
+                                    <span class="bank-value">TICKETBOOTH COMPANY</span>
+                                </div>
+                                <div class="bank-detail">
+                                    <span class="bank-label">Số tiền:</span>
+                                    <span class="bank-value highlight" th:text="${#numbers.formatInteger(payment.cost, 0, 'COMMA') + ' VNĐ'}">200,000 VNĐ</span>
+                                    <button class="copy-btn" th:attr="onclick=|copyToClipboard('${payment.cost}')|">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="bank-detail">
+                                    <span class="bank-label">Nội dung:</span>
+                                    <span class="bank-value highlight" th:text="'TICKETBOOTH ' + ${payment.orderCode}">TICKETBOOTH ORD123456</span>
+                                    <button class="copy-btn" th:attr="onclick=|copyToClipboard('TICKETBOOTH ${payment.orderCode}')|">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="payment-note">
+                                <i class="fas fa-info-circle"></i>
+                                <p>Vui lòng chuyển khoản <strong>ĐÚNG số tiền</strong> và <strong>ĐÚNG nội dung</strong> để đơn hàng được xác nhận tự động.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cash Payment -->
+                    <div th:if="${payment.method == 'Tiền mặt'}" class="cash-payment">
+                        <div class="payment-card">
+                            <h3><i class="fas fa-money-bill-wave"></i> Thanh toán tiền mặt</h3>
+
+                            <div class="cash-info">
+                                <div class="cash-icon">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                </div>
+                                <p class="cash-instruction">Vui lòng thanh toán tiền mặt tại quầy trước khi vào rạp.</p>
+                                <p class="cash-amount">Số tiền cần thanh toán: <strong th:text="${#numbers.formatInteger(payment.cost, 0, 'COMMA') + ' VNĐ'}">200,000 VNĐ</strong></p>
+                            </div>
+
+                            <div class="payment-note">
+                                <i class="fas fa-info-circle"></i>
+                                <p>Đơn hàng của bạn đã được ghi nhận. Vui lòng đến quầy thanh toán trước giờ chiếu <strong>ít nhất 15 phút</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Payment -->
+                    <div th:if="${payment.method == 'Thẻ tín dụng/ghi nợ'}" class="card-payment">
+                        <!-- Missing card info (logged in) -->
+                        <div th:if="${currentUser != null and userCard == null}"
+                             class="card-form-container">
+                            <div class="payment-card">
+                                <h3><i class="fas fa-credit-card"></i> Nhập thông tin thẻ</h3>
+                                <form id="cardForm" class="card-form">
+                                    <div class="form-group">
+                                        <label for="cardNumber">Số thẻ <span class="required">*</span></label>
+                                        <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="holderName">Tên chủ thẻ <span class="required">*</span></label>
+                                        <input type="text" id="holderName" name="holderName" placeholder="NGUYEN VAN A" required>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="expirationDate">Ngày hết hạn <span class="required">*</span></label>
+                          <input type="text" id="expirationDate" name="expirationDate" 
+                              placeholder="MM/YYYY" maxlength="7" required 
+                              pattern="^(0[1-9]|1[0-2])\/[0-9]{4}$" 
+                              title="Định dạng MM/YYYY (VD: 08/2026)">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="cvv">CVV <span class="required">*</span></label>
+                                            <input type="text" id="cvv" name="cvv"
+                                                   placeholder="123" maxlength="4" required>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn-primary">
+                                        <i class="fas fa-credit-card"></i> Lưu thông tin thẻ
+                                    </button>
+                                    <!-- Dùng email để cập nhật thẻ thay vì userId -->
+                                    <input type="hidden" id="email" th:value="${currentUser != null} ? ${currentUser.email} : ''">
+                                </form>
+
+                                <div class="payment-note">
+                                    <i class="fas fa-info-circle"></i>
+                                    <p>Thông tin thẻ của bạn sẽ được mã hóa và bảo mật. Chúng tôi không lưu trữ thông tin thẻ đầy đủ.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Show existing card info if user has card information -->
+                        <div th:if="${userCard != null and userCard.cardNumber != null and userCard.cardNumber != '' and
+                                     userCard.holdersName != null and userCard.holdersName != '' and
+                                     userCard.expirationDate != null and userCard.cvv != null and userCard.cvv != ''}"
+                             class="existing-card-info">
+                            <div class="payment-card">
+                                <h3><i class="fas fa-credit-card"></i> Thanh toán bằng thẻ</h3>
+
+                                <div class="card-display">
+                                    <div class="card-visual">
+                                        <div class="card-number">
+                                            <span th:text="${(userCard != null and userCard.cardNumber != null and #strings.length(userCard.cardNumber) >= 4) 
+                                                ? '**** **** **** ' + #strings.substring(userCard.cardNumber, #strings.length(userCard.cardNumber) - 4, #strings.length(userCard.cardNumber)) 
+                                                : '**** **** ****'}">**** **** **** 3456</span>
+                                        </div>
+                                        <div class="card-holder">
+                                            <span th:text="${userCard.holdersName}">NGUYEN VAN A</span>
+                                        </div>
+                                        <div class="card-expiry">
+                                            <span th:text="${#dates.format(userCard.expirationDate, 'MM/yyyy')}">12/2025</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-info">
+                                    <div class="card-icon">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <p class="card-instruction">Thanh toán đã được xử lý qua cổng thanh toán thẻ.</p>
+                                    <p class="card-amount">Số tiền đã thanh toán: <strong th:text="${#numbers.formatInteger(payment.cost, 0, 'COMMA') + ' VNĐ'}">200,000 VNĐ</strong></p>
+                                </div>
+
+                                <div class="payment-note">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Giao dịch thành công! Vui lòng đến rạp trước giờ chiếu <strong>ít nhất 15 phút</strong>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn-secondary" onclick="window.location.href='/'">
+                            <i class="fas fa-home"></i> Về trang chủ
+                        </button>
+                        <button class="btn-primary" onclick="window.location.href='/my-tickets'">
+                            <i class="fas fa-ticket-alt"></i> Xem vé của tôi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TicketBooth</h3>
+                    <p>Trải nghiệm điện ảnh tuyệt vời nhất</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TicketBooth. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show notification
+                const notification = document.createElement('div');
+                notification.className = 'copy-notification';
+                notification.textContent = 'Đã sao chép!';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 2000);
+            }).catch(err => {
+                alert('Không thể sao chép. Vui lòng sao chép thủ công.');
+            });
+        }
+
+        // Card form handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardForm = document.getElementById('cardForm');
+            if (cardForm) {
+                // Format card number input
+                const cardNumberInput = document.getElementById('cardNumber');
+                cardNumberInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s/g, '');
+                    let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+                    if (formattedValue.length > 19) {
+                        formattedValue = formattedValue.substr(0, 19);
+                    }
+                    e.target.value = formattedValue;
+                });
+
+                // Format expiration date input
+                const expirationInput = document.getElementById('expirationDate');
+                expirationInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 6);
+                    }
+                    e.target.value = value;
+                });
+
+                // Only allow numbers for CVV
+                const cvvInput = document.getElementById('cvv');
+                cvvInput.addEventListener('input', function(e) {
+                    e.target.value = e.target.value.replace(/\D/g, '');
+                });
+
+                // Handle form submission
+                cardForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const emailEl = document.getElementById('email');
+                    const formData = {
+                        email: emailEl ? emailEl.value : null,
+                        card_number: document.getElementById('cardNumber').value.replace(/\s/g, ''),
+                        holder_name: document.getElementById('holderName').value.trim(),
+                        expiration_date: document.getElementById('expirationDate').value.trim(),
+                        card_cvv: document.getElementById('cvv').value.trim()
+                    };
+
+                    // Basic FE validation bổ sung
+                    if (!formData.email) {
+                        alert('Thiếu email. Vui lòng tải lại trang.');
+                        return;
+                    }
+                    if (formData.card_number.length < 13) {
+                        alert('Số thẻ không hợp lệ.');
+                        return;
+                    }
+                    if (!/^\d{2}\/\d{4}$/.test(formData.expiration_date)) {
+                        alert('Ngày hết hạn phải ở định dạng MM/YYYY');
+                        return;
+                    }
+
+                    fetch('/api/v1/payments/card', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert(data.message);
+                            // Reload page to show updated card info
+                            location.reload();
+                        } else {
+                            alert(data.message || 'Có lỗi xảy ra khi lưu thông tin thẻ.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra khi lưu thông tin thẻ. Vui lòng thử lại.');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

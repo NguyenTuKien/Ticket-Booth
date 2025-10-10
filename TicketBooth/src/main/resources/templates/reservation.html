@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn ghế - TicketBooth</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/seat-selection.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <a th:href="@{/}">
+                        <h1><i class="fas fa-film"></i> TicketBooth</h1>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a th:href="@{/}">Trang chủ</a></li>
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/login}" class="login-btn">Đăng nhập</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()">
+                        <a th:href="@{/logout}" class="logout-btn">Đăng xuất</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb-section">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a th:href="@{/}">Trang chủ</a>
+                <span class="separator">›</span>
+                <a th:href="@{/movie(movieId=${movie.id})}">Chi tiết phim</a>
+                <span class="separator">›</span>
+                <span>Chọn ghế</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Movie Info Bar -->
+    <section class="movie-info-bar">
+        <div class="container">
+            <div class="movie-info-content">
+                <img th:src="${movie.thumbnailUrl}" th:alt="${movie.title}" class="movie-thumbnail">
+                <div class="movie-info-details">
+                    <h2 class="movie-name" th:text="${movie.title}">Tên Phim</h2>
+                    <div class="show-details">
+                        <span><i class="fas fa-door-open"></i> <span th:text="${show.hallName}">Phòng 5</span></span>
+                        <span><i class="far fa-calendar-alt"></i> <span th:text="${#temporals.format(show.showDate, 'dd/MM/yyyy')}">06/10/2025</span></span>
+                        <span><i class="far fa-clock"></i> <span th:text="${#temporals.format(show.startTime, 'HH:mm')}">16:50</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seat Selection Section -->
+    <section class="seat-selection-section">
+        <div class="container">
+            <div class="selection-layout">
+                <!-- Seat Map -->
+                <div class="seat-map-container">
+                    <div class="screen-container">
+                        <div class="screen">MÀN HÌNH CHIẾU</div>
+                    </div>
+
+                    <div class="seat-map" id="seat-map">
+                        <!-- Seats will be generated here by JavaScript -->
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="seat-legend">
+                        <div class="legend-item">
+                            <div class="seat-icon seat-normal seat-available"></div>
+                            <span>Ghế thường</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="seat-icon seat-vip seat-available"></div>
+                            <span>Ghế VIP</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="seat-icon seat-couple seat-available"></div>
+                            <span>Ghế đôi</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="seat-icon seat-selected"></div>
+                            <span>Đang chọn</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="seat-icon seat-occupied"></div>
+                            <span>Đã đặt</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking Summary -->
+                <div class="booking-summary">
+                    <h3>Thông tin đặt vé</h3>
+                    
+                    <div class="summary-section">
+                        <h4>Phim</h4>
+                        <p th:text="${movie.title}">Tên Phim</p>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Rạp chiếu</h4>
+                        <p th:text="${show.hallName}">Phòng 5</p>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Ngày & Giờ</h4>
+                        <p>
+                            <span th:text="${#temporals.format(show.showDate, 'dd/MM/yyyy')}">06/10/2025</span> - 
+                            <span th:text="${#temporals.format(show.startTime, 'HH:mm')}">16:50</span>
+                        </p>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Ghế đã chọn</h4>
+                        <div id="selected-seats-display" class="selected-seats-list">
+                            <p class="no-seats-selected">Chưa chọn ghế nào</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Thời gian còn lại</h4>
+                        <div id="countdown-timer" class="countdown-timer">9:54</div>
+                    </div>
+
+                    <div class="summary-total">
+                        <span class="total-label">Tổng tiền:</span>
+                        <span id="total-price" class="total-price">0 vnđ</span>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Phương thức thanh toán</h4>
+                        <div class="payment-methods">
+                            <label class="payment-method">
+                                <input type="radio" name="payment-method" value="BANK" checked>
+                                <div class="payment-option">
+                                    <i class="fas fa-university"></i>
+                                    <span>Chuyển khoản ngân hàng</span>
+                                </div>
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="payment-method" value="CARD">
+                                <div class="payment-option">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Thẻ ghi nợ/tín dụng</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <button id="btn-continue" class="btn-continue" onclick="proceedToCheckout()" disabled>
+                        TIẾP TỤC
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hidden data for JavaScript -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.allTicketsData = /*[[${tickets}]]*/ [];
+        window.availableTicketsData = /*[[${availableTickets}]]*/ [];
+        window.showId = /*[[${show.id}]]*/ null;
+        window.userId = /*[[${userId}]]*/ null;
+        /*]]>*/
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TicketBooth</h3>
+                    <p>Trải nghiệm điện ảnh tuyệt vời nhất</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TicketBooth. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/reservation.js}"></script>
+</body>
+</html>

@@ -19,11 +19,6 @@ public class AuthService {
     public User register(User user) {
         // Encode mật khẩu
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        // Các trường khác để null theo yêu cầu (builder không set thì mặc định đã null)
-        user.setCardNumber(null);
-        user.setHoldersName(null);
-        user.setExpirationDate(null);
-        user.setCvv(null);
         if (user.getRole() == null) {
             user.setRole(Role.GUEST);
         }

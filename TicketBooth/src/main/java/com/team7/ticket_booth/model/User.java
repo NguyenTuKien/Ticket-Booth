@@ -45,19 +45,6 @@ public class User {
     @Column(name = "fullName", length = 100, nullable = false)
     private String fullName;
 
-    @Column(name = "cardNumber", length = 16)
-    private String cardNumber;
-
-    @Column(name = "holdersName", length = 100)
-    private String holdersName;
-
-    @Column(name = "expirationDate")
-    @Temporal(TemporalType.DATE)
-    private Date expirationDate;
-
-    @Column(name = "cvv", length = 4)
-    private String cvv;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role = Role.GUEST;
@@ -72,4 +59,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Card card;
 }

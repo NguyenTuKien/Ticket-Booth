@@ -1,0 +1,12 @@
+/* Price page */
+.page-hero {background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff;padding:50px 0;margin-bottom:30px;}
+.page-hero h2{margin:0;font-size:2rem;}
+.price-section .price-table-loading{padding:30px;text-align:center;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.price-block{background:#fff;margin-bottom:25px;padding:20px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.06);}
+.price-block h3{margin-top:0;font-size:1.2rem;color:#1e3c72;}
+.price-table-inner{width:100%;border-collapse:collapse;margin-top:10px;}
+.price-table-inner th,.price-table-inner td{padding:10px 14px;border-bottom:1px solid #eee;text-align:left;}
+.price-table-inner th{background:#f5f7fa;font-weight:600;font-size:.9rem;}
+.price-table-inner tbody tr:hover{background:#f9fbff;}
+.price-note{margin-top:15px;font-size:.9rem;color:#555;background:#f8fafc;padding:15px;border-left:4px solid #1e3c72;border-radius:6px;}
+@media(max-width:768px){.price-block{padding:16px}.price-table-inner th,.price-table-inner td{padding:8px 10px}}

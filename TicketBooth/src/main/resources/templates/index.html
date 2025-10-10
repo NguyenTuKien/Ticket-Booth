@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketBooth - Đặt vé xem phim online</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<!--    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">-->
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1><i class="fas fa-film"></i> TicketBooth</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Trang chủ</a></li>
+                    <li><a th:href="@{/price}"><i class="fas fa-ticket-alt"></i> Giá vé</a></li>
+                    <li><a th:href="@{/about}"><i class="fas fa-circle-info"></i> Giới thiệu</a></li>
+                    <li><a href="/my-tickets" class="tickets-btn">
+                        <i class="fas fa-ticket-alt"></i> Vé đã đặt
+                    </a></li>
+                    <!-- Nếu CHƯA đăng nhập -->
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/login}" class="login-btn">Đăng nhập</a>
+                    </li>
+                    <li sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/signup}" class="signup-btn">Đăng ký</a>
+                    </li>
+                    <!-- Nếu ĐÃ đăng nhập -->
+                    <li sec:authorize="isAuthenticated()">
+                        <a th:href="@{/logout}" class="logout-btn">Đăng xuất</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- (Đã bỏ thanh tìm kiếm, thay bằng mục Giá vé / Giới thiệu) -->
+    </header>
+
+    <!-- Hero Slider Section -->
+    <section id="home" class="hero-slider">
+        <div class="slider-container">
+            <div class="slider-wrapper">
+                <div class="slide" th:each="movie, iterStat : ${currentlyMovies}" th:classappend="${iterStat.index == 0} ? 'active' : ''">
+                    <div class="slide-background" th:style="|background-image: url('${movie.thumbnailUrl}')|"></div>
+                    <div class="slide-content">
+                        <div class="container">
+                            <div class="movie-details">
+                                <h1 th:text="${movie.title}">Tên Phim</h1>
+                                <p class="movie-description" th:text="${movie.description}">Mô tả phim</p>
+                                <div class="movie-meta">
+                                    <span class="genre" th:text="${movie.genre}">Thể loại</span>
+                                    <span class="duration" th:text="${movie.duration + ' phút'}">120 phút</span>
+                                    <span class="release-date" th:text="${movie.beginDay}">19.09</span>
+                                </div>
+                                <div class="movie-actions">
+                                    <button class="btn-primary" th:attr="data-id=${movie.id}" onclick="viewMovieDetail(this.dataset.id)">
+                                        <i class="fas fa-play"></i> Đặt vé ngay
+                                    </button>
+<!--                                    <button class="btn-secondary" th:attr="data-id=${movie.title}" onclick="showTrailer(this.dataset.title)">-->
+<!--                                        <i class="fas fa-play-circle"></i> Xem trailer-->
+<!--                                    </button>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider Navigation -->
+            <div class="slider-nav">
+                <button class="slider-btn prev" onclick="previousSlide()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="slider-btn next" onclick="nextSlide()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Slider Dots -->
+            <div class="slider-dots">
+                <span class="dot active" th:each="movie, iterStat : ${currentlyMovies}"
+                      th:classappend="${iterStat.index == 0} ? 'active' : ''"
+                      th:onclick="'currentSlide(' + ${iterStat.index + 1} + ')'"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Movies Section -->
+    <section id="movies" class="movies-section">
+        <div class="container">
+            <!-- Movie Categories Tabs -->
+            <div class="movie-categories">
+                <div class="category-tabs">
+                    <button class="tab-btn active" onclick="showMovieCategory('now-showing')">PHIM ĐANG CHIẾU</button>
+                    <button class="tab-btn" onclick="showMovieCategory('coming-soon')">PHIM SẮP CHIẾU</button>
+                </div>
+            </div>
+
+            <!-- Now Showing Movies -->
+            <div id="now-showing" class="movie-category active">
+                <div class="movies-grid">
+                    <div class="movie-card" th:each="movie : ${currentlyMovies}">
+                        <div class="movie-poster" th:attr="data-id=${movie.id}" onclick="viewMovieDetail(this.dataset.id)">
+                            <img th:src="${movie.thumbnailUrl}" th:alt="${movie.title}" class="poster-image">
+<!--                            <div class="movie-overlay">-->
+<!--                                <button class="play-btn" th:attr="data-id=${movie.id}" onclick="event.stopPropagation(); showTrailer(this.dataset.id)">-->
+<!--                                    <i class="fas fa-play"></i>-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                            <div class="movie-badge" th:if="${movie.isNew}">-->
+<!--                                <span>MỚI</span>-->
+<!--                            </div>-->
+                        </div>
+                        <div class="movie-info">
+                            <h3 class="movie-title" th:text="${movie.title}" th:attr="data-id=${movie.id}" onclick="viewMovieDetail(this.dataset.id)" style="cursor: pointer;">Tên Phim</h3>
+                            <p class="movie-genre" th:text="${movie.genre}">Thể loại</p>
+                            <div class="movie-meta">
+                                <span class="duration" th:text="${movie.duration + ' phút'}">120 phút</span>
+<!--                                <span class="rating" th:if="${movie.rating}">-->
+<!--                                    <i class="fas fa-star"></i>-->
+<!--                                    <span th:text="${movie.rating}">8.5</span>-->
+<!--                                </span>-->
+                            </div>
+                            <button class="book-btn" th:attr="data-id=${movie.id}" onclick="viewMovieDetail(this.dataset.id)">
+                                Xem chi tiết & Đặt vé
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coming Soon Movies -->
+            <div id="coming-soon" class="movie-category">
+                <div class="movies-grid">
+                    <div class="movie-card" th:each="movie : ${upcomingMovies}">
+                        <div class="movie-poster"
+                             th:attr="data-id=${movie.id}"
+                             onclick="viewMovieDetail(this.dataset.id)">
+                            <img th:src="${movie.thumbnailUrl}" th:alt="${movie.title}" class="poster-image">
+<!--                            <div class="movie-overlay">-->
+<!--                                <button class="play-btn" th:attr="data-id=${movie.id}" onclick="event.stopPropagation(); showTrailer(this.dataset.id)">-->
+<!--                                    <i class="fas fa-play"></i>-->
+<!--                                </button>-->
+<!--                            </div>-->
+                            <div class="release-date-badge">
+                                <span th:text="${#temporals.format(movie.beginDay, 'dd-MM')}">26-09</span>
+                            </div>
+                        </div>
+                        <div class="movie-info">
+                            <h3 class="movie-title"
+                                th:text="${movie.title}"
+                                th:attr="data-id=${movie.id}"
+                                onclick="viewMovieDetail(this.dataset.id)"
+                                style="cursor: pointer;">Tên Phim</h3>
+                            <p class="movie-genre" th:text="${movie.genre}">Thể loại</p>
+                            <div class="movie-meta">
+                                <span class="duration" th:text="${movie.duration + ' phút'}">120 phút</span>
+                                <span class="release-info" th:text="${'Ngày ' + #temporals.format(movie.beginDay, 'dd-MM')}">
+                                </span>
+                            </div>
+                            <button class="notify-btn" th:attr="data-id=${movie.id}" onclick="viewMovieDetail(this.dataset.id)">
+                                Xem chi tiết
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TicketBooth</h3>
+                    <p>Trải nghiệm điện ảnh tuyệt vời nhất</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết</h4>
+                    <ul>
+                        <li><a href="#home">Trang chủ</a></li>
+                        <li><a href="#movies">Phim</a></li>
+                        <li><a href="#theaters">Rạp</a></li>
+                        <li><a href="#promotion">Khuyến mãi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <ul>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Chính sách</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên hệ</h4>
+                    <p><i class="fas fa-phone"></i> 1900 1234</p>
+                    <p><i class="fas fa-envelope"></i> info@TicketBooth.vn</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TicketBooth. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>
