@@ -21,7 +21,7 @@ public class Hall {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 50)
+    @Column(name = "name", unique = true, nullable = false, length = 50, columnDefinition = "NVARCHAR(50)")
     private String name;
 
     @Column(name = "rowNumber", nullable = false)

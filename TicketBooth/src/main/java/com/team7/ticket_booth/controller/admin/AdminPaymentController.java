@@ -18,9 +18,9 @@ public class AdminPaymentController {
     private final PaymentService paymentService;
     private final UserService userService;
 
-    @PutMapping("/updateStatus")
-    public void updatePaymentStatus(@RequestParam UUID orderId, @RequestParam Status status) {
-        paymentService.updatePaymentStatus(orderId, status);
+    @PutMapping("/success")
+    public void orderSuccess(@RequestParam UUID orderId) {
+        paymentService.updatePaymentStatus(orderId, Status.SUCCESS);
     }
 
     @PostMapping("/addCard")

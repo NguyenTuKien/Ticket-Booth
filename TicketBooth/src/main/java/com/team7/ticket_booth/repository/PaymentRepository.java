@@ -11,6 +11,6 @@ import java.util.UUID;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, UUID> {
-
+    @Query("SELECT p FROM Payment p WHERE p.order.id = :orderId")
     Optional<Payment> findByOrderId(UUID orderId);
 }

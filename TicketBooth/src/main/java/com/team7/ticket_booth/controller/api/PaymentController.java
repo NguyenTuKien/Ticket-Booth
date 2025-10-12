@@ -1,6 +1,7 @@
 package com.team7.ticket_booth.controller.api;
 
 import com.team7.ticket_booth.dto.request.CardRequestDTO;
+import com.team7.ticket_booth.service.PaymentService;
 import com.team7.ticket_booth.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,9 @@ import java.util.Map;
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
 public class PaymentController {
-
     private final UserService userService;
 
-    @PostMapping("/card")
+    @RequestMapping(value ="/card", method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<Map<String, String>> processPayment(@RequestBody CardRequestDTO cardRequestDTO) {
         Map<String, String> response = new HashMap<>();
         try {
@@ -35,4 +35,5 @@ public class PaymentController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
 }

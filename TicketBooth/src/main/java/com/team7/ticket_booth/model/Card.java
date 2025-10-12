@@ -1,5 +1,6 @@
 package com.team7.ticket_booth.model;
 
+import com.team7.ticket_booth.model.enums.CardType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -24,7 +25,7 @@ public class Card {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "cardNumber", length = 16)
+    @Column(name = "cardNumber", length = 4)
     private String cardNumber;
 
     @Column(name = "holdersName", length = 100)
@@ -34,6 +35,10 @@ public class Card {
     @Temporal(TemporalType.DATE)
     private Date expirationDate;
 
-    @Column(name = "cvv", length = 4)
-    private String cvv;
+    @Column(name = "CardType", length = 20)
+    @Enumerated(EnumType.STRING)
+    private CardType cardType;
+
+    @Column(name = "token", length = 255)
+    private String token;
 }

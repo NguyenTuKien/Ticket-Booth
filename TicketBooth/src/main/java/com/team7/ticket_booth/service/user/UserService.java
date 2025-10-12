@@ -25,15 +25,19 @@ public class UserService {
 
         Card card;
         if (existingCard.isPresent()) {
-            // Cập nhật card hiện có
             card = existingCard.get();
-            card.setCardNumber(cardRequestDTO.getCardNumber());
+            card.setCardNumber(cardRequestDTO.getCardNumber().substring(16 - 4, 16));
             card.setHoldersName(cardRequestDTO.getHolderName());
             card.setExpirationDate(cardRequestDTO.getExpirationDate());
-            card.setCvv(cardRequestDTO.getCvv());
+            card.setCardType(cardRequestDTO.getCardType());
         } else {
-            card = new Card(null, user, cardRequestDTO.getCardNumber(), cardRequestDTO.getHolderName(),
-                    cardRequestDTO.getExpirationDate(), cardRequestDTO.getCvv());
+            card = new Card().builder()
+                    .cardNumber(cardRequestDTO.getCardNumber().substring(16 - 4, 16)) // Lưu 4 chữ số cuối
+                    .holdersName(cardRequestDTO.getHolderName())
+                    .expirationDate(cardRequestDTO.getExpirationDate())
+                    .cardType(cardRequestDTO.getCardType())
+                    .user(user)
+                    .build();
         }
         cardRepository.save(card);
     }

@@ -4,6 +4,7 @@ import com.team7.ticket_booth.model.enums.Genre;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.type.descriptor.jdbc.NVarcharJdbcType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Movie {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, columnDefinition = "NVARCHAR(200)")
     private String title;
 
     @Column(name = "genre")
@@ -32,16 +33,16 @@ public class Movie {
     @Column(name = "thumbnailUrl", length = 500)
     private String thumbnailUrl;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "NTEXT")
     private String description;
 
     @Column(name = "duration", nullable = false)
     private int duration; // duration in minutes
 
-    @Column(name = "beginDay")
+    @Column(name = "releaseDay")
     private LocalDate beginDay;
 
-    @Column(name = "endDay")
+    @Column(name = "closeDay")
     private LocalDate endDay;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

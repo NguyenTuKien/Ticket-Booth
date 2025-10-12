@@ -42,7 +42,7 @@ public class User {
     @EqualsAndHashCode.Include
     private String email;
 
-    @Column(name = "fullName", length = 100, nullable = false)
+    @Column(name = "fullName", length = 100, nullable = false, columnDefinition = "NVARCHAR(100)")
     private String fullName;
 
     @Enumerated(EnumType.STRING)

@@ -181,6 +181,14 @@
                                         <label for="holderName">Tên chủ thẻ <span class="required">*</span></label>
                                         <input type="text" id="holderName" name="holderName" placeholder="NGUYEN VAN A" required>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="cardType">Loại thẻ <span class="required">*</span></label>
+                                        <select id="cardType" name="cardType" required>
+                                            <option value="">Chọn loại thẻ</option>
+                                            <option value="VISA">Visa</option>
+                                            <option value="MASTERCARD">MasterCard</option>
+                                        </select>
+                                    </div>
                                     <div class="form-row">
                                         <div class="form-group">
                                             <label for="expirationDate">Ngày hết hạn <span class="required">*</span></label>
@@ -214,7 +222,7 @@
                         <!-- Show existing card info if user has card information -->
                         <div th:if="${userCard != null and userCard.cardNumber != null and userCard.cardNumber != '' and
                                      userCard.holdersName != null and userCard.holdersName != '' and
-                                     userCard.expirationDate != null and userCard.cvv != null and userCard.cvv != ''}"
+                                     userCard.expirationDate != null and userCard.cardType != null}"
                              class="existing-card-info">
                             <div class="payment-card">
                                 <h3><i class="fas fa-credit-card"></i> Thanh toán bằng thẻ</h3>
@@ -222,8 +230,8 @@
                                 <div class="card-display">
                                     <div class="card-visual">
                                         <div class="card-number">
-                                            <span th:text="${(userCard != null and userCard.cardNumber != null and #strings.length(userCard.cardNumber) >= 4) 
-                                                ? '**** **** **** ' + #strings.substring(userCard.cardNumber, #strings.length(userCard.cardNumber) - 4, #strings.length(userCard.cardNumber)) 
+                                            <span th:text="${(userCard != null and userCard.cardNumber != null) 
+                                                ? '**** **** **** ' + userCard.cardNumber 
                                                 : '**** **** ****'}">**** **** **** 3456</span>
                                         </div>
                                         <div class="card-holder">
@@ -341,6 +349,7 @@
                     const emailEl = document.getElementById('email');
                     const formData = {
                         email: emailEl ? emailEl.value : null,
+                        card_type: document.getElementById('cardType').value.trim(),
                         card_number: document.getElementById('cardNumber').value.replace(/\s/g, ''),
                         holder_name: document.getElementById('holderName').value.trim(),
                         expiration_date: document.getElementById('expirationDate').value.trim(),
@@ -354,6 +363,10 @@
                     }
                     if (formData.card_number.length < 13) {
                         alert('Số thẻ không hợp lệ.');
+                        return;
+                    }
+                    if (!formData.card_type) {
+                        alert('Vui lòng chọn loại thẻ.');
                         return;
                     }
                     if (!/^\d{2}\/\d{4}$/.test(formData.expiration_date)) {
