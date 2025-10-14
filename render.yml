@@ -1,22 +1,48 @@
-# render.yaml (để Render hiểu và triển khai)
+# render.yaml
 services:
-  # 1. Dịch vụ Backend (dịch từ 'web')
+  # 1. Dịch vụ Backend (Ticket Booth App)
+  # Đây là dịch vụ web chính, sẽ được truy cập từ bên ngoài.
   - type: web
-    name: my-backend-app # Đặt tên cho dịch vụ của bạn
-    env: docker # Báo cho Render biết sẽ build từ Dockerfile
+    name: ticket-booth
+    env: docker
+    dockerfilePath: ./TicketBooth/Dockerfile # Đường dẫn đến Dockerfile của bạn
     
-    # Render sẽ tự động gán cổng, không cần khai báo 'ports'
+    # Render tự động phát hiện và mở cổng mà ứng dụng của bạn lắng nghe.
+    # Health Check để Render biết khi nào ứng dụng của bạn sẵn sàng.
+    healthCheck:
+      path: /actuator/health # Thay đổi nếu endpoint của bạn khác
     
-    # Khai báo biến môi trường
+    # Khai báo biến môi trường.
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: my-database # Tên của dịch vụ database bên dưới
-          property: connectionString # Render tự tạo chuỗi kết nối an toàn
+      # Render sẽ tự động kết nối service này với service 'mssql' bên dưới.
+      - key: spring.datasource.url
+        value: jdbc:sqlserver://mssql:1433;databaseName=TicketBooth;encrypt=false;trustServerCertificate=true
+      - key: spring.datasource.username
+        value: SA
+      - key: spring.datasource.password
+        # Rất khuyến khích sử dụng Secret File của Render cho mật khẩu!
+        # Xem ghi chú về bảo mật bên dưới.
+        value: TestAcc@1234
 
-  # 2. Dịch vụ Database (dịch từ 'db')
-  - type: psql # psql là viết tắt của PostgreSQL trên Render
-    name: my-database # Đặt tên cho database
-    # Bạn không cần khai báo user, password, dbname ở đây.
-    # Render sẽ tự tạo và cung cấp qua chuỗi kết nối ở trên.
-    # Render cũng tự quản lý lưu trữ (volumes) cho bạn.
+  # 2. Dịch vụ Database (MS SQL Server)
+  # Đây là dịch vụ riêng, chỉ có thể được truy cập bởi các dịch vụ khác trong cùng tài khoản.
+  - type: priv
+    name: mssql
+    env: docker
+    dockerImage: mcr.microsoft.com/mssql/server:2022-latest
+    
+    # Khai báo biến môi trường cho MS SQL Server.
+    envVars:
+      - key: ACCEPT_EULA
+        value: "Y"
+      - key: SA_PASSWORD
+        value: TestAcc@1234 # Nên dùng Secret File!
+      - key: MSSQL_PID
+        value: "Developer"
+        
+    # QUAN TRỌNG: Tạo một ổ đĩa bền vững để lưu trữ dữ liệu database.
+    # Dữ liệu sẽ không bị mất khi bạn triển khai lại.
+    disks:
+      - name: mssql-data
+        mountPath: /var/opt/mssql # Đây là nơi MS SQL lưu dữ liệu
+        sizeGB: 10 # Kích thước khởi tạo, bạn có thể tăng sau này
