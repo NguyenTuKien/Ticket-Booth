@@ -32,7 +32,9 @@ public class MovieService {
                     genre(Genre.findByDescription(dto.getGenre())).
                     description(dto.getDescription()).
                     thumbnailUrl(dto.getThumbnailUrl()).
+                    trailerUrl(dto.getTrailerUrl()).
                     duration(dto.getDuration()).
+                    rating(dto.getRating()).
                     beginDay(dto.getBeginDay()).
                     endDay(dto.getEndDay()).
                     build();
@@ -62,6 +64,12 @@ public class MovieService {
         }
         Pageable pageable = PageRequest.of(page, 20);
         Page<Movie> movies = movieRepository.findByGenre(genre, pageable);
+        return movies.getContent().stream().map(MovieResponseDTO::new).toList();
+    }
+
+    public List<MovieResponseDTO> getHighestRatedMovies(int page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<Movie> movies = movieRepository.findMovieOrderByRatingDesc(pageable);
         return movies.getContent().stream().map(MovieResponseDTO::new).toList();
     }
 

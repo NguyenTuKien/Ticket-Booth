@@ -1,6 +1,7 @@
 package com.team7.ticket_booth.controller.web;
 
 import com.team7.ticket_booth.dto.response.MovieResponseDTO;
+import com.team7.ticket_booth.model.Movie;
 import com.team7.ticket_booth.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,8 @@ public class HomepageController {
         LocalDate now = LocalDate.now().plusDays(1);
         List<MovieResponseDTO> currentlyMovies = movieService.getCurrentMovies(now, page);
         List<MovieResponseDTO> upcomingMovies = movieService.getUpcomingMovies(now, page);
+        List<MovieResponseDTO> topRatedMovies = movieService.getHighestRatedMovies(page);
+        model.addAttribute("topRatedMovies", topRatedMovies);
         model.addAttribute("currentlyMovies", currentlyMovies);
         model.addAttribute("upcomingMovies", upcomingMovies);
         return "index"; // => index.html

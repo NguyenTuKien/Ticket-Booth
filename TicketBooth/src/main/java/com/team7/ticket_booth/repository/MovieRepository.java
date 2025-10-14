@@ -32,5 +32,6 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
 
     Page<Movie> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
-
+    @Query("SELECT m FROM Movie m ORDER BY m.rating DESC")
+    Page<Movie> findMovieOrderByRatingDesc(Pageable pageable);
 }

@@ -24,7 +24,7 @@ public class Seat {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 10)
+    @Column(name = "position", nullable = false, length = 10)
     private String position;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1334,6 +1334,25 @@ body {
     flex-wrap: wrap;
 }
 
+.movie-meta > div {
+    background: rgba(255,255,255,0.3);
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 1rem;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.4);
+    color: #ffffff;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.8);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.movie-meta > div i {
+    color: #ffc107;
+}
+
 .movie-meta span {
     background: rgba(255,255,255,0.3);
     padding: 8px 18px;
@@ -1389,6 +1408,32 @@ body {
 .btn-secondary:hover {
     background: white;
     color: #333;
+}
+
+.btn-trailer {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+.btn-trailer:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-trailer i {
+    font-size: 1.1rem;
 }
 
 .slider-nav {
@@ -1642,6 +1687,24 @@ body {
     align-items: center;
     gap: 5px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.movie-meta .rating {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+    padding: 6px 14px;
+    border-radius: 20px;
+    color: #1a1a1a;
+    font-weight: 700;
+    border: 2px solid #ffc107;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.movie-meta .rating i {
+    color: #ffc107;
+    font-size: 0.9em;
 }
 
 .movie-meta .duration::before {

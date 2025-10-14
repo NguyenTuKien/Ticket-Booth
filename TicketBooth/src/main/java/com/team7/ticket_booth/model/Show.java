@@ -37,7 +37,7 @@ public class Show {
     @Enumerated(EnumType.ORDINAL)
     private Shift shift;
 
-    @Column(name = "day", nullable = false)
+    @Column(name = "showDate", nullable = false)
     private LocalDate showDate;
 
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

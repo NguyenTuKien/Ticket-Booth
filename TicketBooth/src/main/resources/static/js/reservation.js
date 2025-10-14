@@ -283,13 +283,8 @@ function proceedToCheckout() {
             return;
         }
 
-        // Get selected payment method
-        const paymentMethodElement = document.querySelector('input[name="payment-method"]:checked');
-        if (!paymentMethodElement) {
-            alert('Vui lòng chọn phương thức thanh toán');
-            return;
-        }
-        const paymentMethod = paymentMethodElement.value;
+        // Không chọn phương thức ở bước này; mặc định BANK (sẽ xác định chi tiết trên VNPay)
+        const paymentMethod = 'BANK';
 
         // Get ticket IDs
         const ticketIds = selectedSeats.map(seat => seat.id);
@@ -325,8 +320,39 @@ function proceedToCheckout() {
         })
         .then(data => {
             if (!data || !data.orderCode) throw new Error('Thiếu orderCode trong phản hồi');
-            // Redirect to order detail page (GET)
-            window.location.href = `/checkout?orderId=${data.orderCode}`;
+
+            const orderId = data.orderCode;
+
+            // Nếu chọn BANK (VNPay), chuyển hướng trực tiếp sang VNPay, bỏ qua trang checkout
+            if (paymentMethod === 'BANK') {
+                const amount = data.cost || 0;
+                const orderInfo = `TICKETBOOTH ${orderId}`;
+                const cleanOrderId = String(orderId).replace(/-/g, '');
+
+                return fetch(`/api/v1/payments/create_payment?amount=${encodeURIComponent(amount)}&orderId=${encodeURIComponent(cleanOrderId)}&vnp_OrderInfo=${encodeURIComponent(orderInfo)}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Tạo link VNPay thất bại');
+                    return res.json();
+                })
+                .then(resJson => {
+                    const vnpUrl = resJson && (resJson.data || resJson.url);
+                    if (vnpUrl) {
+                        window.location.href = vnpUrl;
+                        return;
+                    }
+                    // Fallback nếu không có URL
+                    window.location.href = `/checkout?orderId=${orderId}`;
+                });
+            }
+
+            // Các phương thức khác: chuyển tới trang checkout như cũ
+            window.location.href = `/checkout?orderId=${orderId}`;
         })
         .catch(error => {
             console.error('Error:', error);

@@ -49,17 +49,14 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role = Role.GUEST;
 
-    @Column(name = "createdAt", updatable = false)
+    @Column(name = "createdTime", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updatedTime")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Card card;
 }

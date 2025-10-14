@@ -2,7 +2,6 @@ package com.team7.ticket_booth.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.team7.ticket_booth.model.enums.Method;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,5 +17,5 @@ public class OrderRequestDTO {
     @JsonProperty("TicketIds")
     private List<UUID> ticketIds;
     @JsonProperty("Method")
-    private Method method;
+    private String method;
 }

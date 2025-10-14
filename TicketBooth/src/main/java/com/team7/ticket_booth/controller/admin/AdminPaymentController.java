@@ -20,12 +20,7 @@ public class AdminPaymentController {
 
     @PutMapping("/success")
     public void orderSuccess(@RequestParam UUID orderId) {
-        paymentService.updatePaymentStatus(orderId, Status.SUCCESS);
-    }
-
-    @PostMapping("/addCard")
-    public void addCardToUser(CardRequestDTO dto) {
-        userService.updateCardInfo(dto);
+        paymentService.updatePaymentStatus(orderId, Status.PAID);
     }
 
 }

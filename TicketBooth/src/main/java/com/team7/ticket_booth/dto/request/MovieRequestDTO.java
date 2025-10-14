@@ -12,20 +12,33 @@ import java.util.List;
 public class MovieRequestDTO {
     @JsonProperty("Title")
     private String title;
+
     @JsonProperty("Genre")
     private String genre;
+
     @JsonProperty("Description")
     private String description;
+
     @JsonProperty("ThumbnailUrl")
     private String thumbnailUrl;
+
+    @JsonProperty("TrailerUrl")
+    private String trailerUrl;
+
     @JsonProperty("Duration")
     private int duration;
+
+    @JsonProperty("Rating")
+    private float rating;
+
     @JsonProperty("BeginDay")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate beginDay;
+
     @JsonProperty("EndDay")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate endDay;
+
     @JsonProperty("StartTimes")
     @JsonFormat(pattern = "HH:mm")
     private List<LocalTime> startTimes;

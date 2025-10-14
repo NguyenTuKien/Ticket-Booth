@@ -61,6 +61,10 @@
                             <span class="value status" th:text="${payment.status}">Chờ thanh toán</span>
                         </div>
                         <div class="info-row">
+                            <span class="label">Thời gian còn lại:</span>
+                            <span class="value countdown-timer" id="payment-countdown">1:00</span>
+                        </div>
+                        <div class="info-row">
                             <span class="label">Số lượng vé:</span>
                             <span class="value" th:text="${tickets.size()}">2</span>
                         </div>
@@ -95,9 +99,18 @@
                     <!-- Bank Transfer Payment -->
                     <div th:if="${payment.method == 'Chuyển khoản ngân hàng'}" class="bank-transfer-payment">
                         <div class="payment-card">
-                            <h3><i class="fas fa-university"></i> Thông tin chuyển khoản</h3>
-                            
-                            <div class="qr-code-container">
+                            <h3><i class="fas fa-university"></i> Thanh toán chuyển khoản / VNPay</h3>
+
+                            <!-- Nếu là link VNPay thì hiển thị nút Thanh toán VNPay -->
+                            <div th:if="${payment.url != null and #strings.contains(payment.url, 'vnpayment.vn')}" style="text-align:center; margin: 16px 0;">
+                                <a class="btn-primary" th:href="${payment.url}" target="_blank" rel="noopener">
+                                    <i class="fas fa-wallet"></i> Thanh toán qua VNPay
+                                </a>
+                                <p style="margin-top:10px; color:#666; font-size: 14px;">Nhấn nút để chuyển đến cổng thanh toán VNPay.</p>
+                            </div>
+
+                            <!-- Fallback: hiển thị QR nếu có URL là ảnh/QR khác -->
+                            <div th:if="${payment.url == null or !#strings.contains(payment.url, 'vnpayment.vn')}" class="qr-code-container">
                                 <div class="qr-code">
                                     <img th:src="${payment.url}" 
                                          alt="QR Code thanh toán" 
@@ -106,7 +119,7 @@
                                 <p class="qr-instruction">Quét mã QR để thanh toán</p>
                             </div>
 
-                            <div class="bank-info">
+                            <div class="bank-info" th:if="${payment.url == null or !#strings.contains(payment.url, 'vnpayment.vn')}">
                                 <div class="bank-detail">
                                     <span class="bank-label">Ngân hàng:</span>
                                     <span class="bank-value">MB Bank</span>
@@ -399,6 +412,81 @@
                 });
             }
         });
+
+        // Payment countdown timer - 1 minute for testing
+        let countdownInterval;
+        let timeRemaining = 1 * 60; // 1 minute in seconds
+        
+        function startPaymentCountdown() {
+            const countdownElement = document.getElementById('payment-countdown');
+            if (!countdownElement) return;
+            
+            countdownInterval = setInterval(() => {
+                timeRemaining--;
+                
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                
+                countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Change styling when time is running out
+                countdownElement.classList.remove('warning', 'danger');
+                
+                if (timeRemaining <= 20) { // Last 20 seconds = danger
+                    countdownElement.classList.add('danger');
+                } else if (timeRemaining <= 40) { // Last 40 seconds = warning
+                    countdownElement.classList.add('warning');
+                }
+                
+                // Time's up - call check API
+                if (timeRemaining <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.textContent = '00:00';
+                    checkOrderPaymentStatus();
+                }
+            }, 1000);
+        }
+        
+        function checkOrderPaymentStatus() {
+            const orderId = new URLSearchParams(window.location.search).get('orderId');
+            if (!orderId) {
+                alert('Hết thời gian thanh toán! Đơn hàng sẽ bị hủy.');
+                window.location.href = '/';
+                return;
+            }
+            
+            fetch(`/api/v1/check?orderId=${orderId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Lỗi khi kiểm tra trạng thái thanh toán');
+            })
+            .then(data => {
+                if (data.status === 'paid') {
+                    alert('Đơn hàng đã được thanh toán thành công!');
+                    location.reload();
+                } else {
+                    alert('Hết thời gian thanh toán! Đơn hàng đã bị hủy.');
+                    window.location.href = '/';
+                }
+            })
+            .catch(error => {
+                console.error('Error checking payment status:', error);
+                alert('Hết thời gian thanh toán! Vui lòng đặt vé lại.');
+                window.location.href = '/';
+            });
+        }
+        
+        // Start countdown when page loads
+        startPaymentCountdown();
     </script>
 </body>
 </html>

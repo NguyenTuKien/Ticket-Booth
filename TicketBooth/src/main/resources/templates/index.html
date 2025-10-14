@@ -51,7 +51,7 @@
     <section id="home" class="hero-slider">
         <div class="slider-container">
             <div class="slider-wrapper">
-                <div class="slide" th:each="movie, iterStat : ${currentlyMovies}" th:classappend="${iterStat.index == 0} ? 'active' : ''">
+                <div class="slide" th:each="movie, iterStat : ${topRatedMovies}" th:classappend="${iterStat.index == 0} ? 'active' : ''">
                     <div class="slide-background" th:style="|background-image: url('${movie.thumbnailUrl}')|"></div>
                     <div class="slide-content">
                         <div class="container">
@@ -59,14 +59,29 @@
                                 <h1 th:text="${movie.title}">Tên Phim</h1>
                                 <p class="movie-description" th:text="${movie.description}">Mô tả phim</p>
                                 <div class="movie-meta">
-                                    <span class="genre" th:text="${movie.genre}">Thể loại</span>
-                                    <span class="duration" th:text="${movie.duration + ' phút'}">120 phút</span>
-                                    <span class="release-date" th:text="${movie.beginDay}">19.09</span>
+                                    <div class="movie-rating" th:if="${movie.rating > 0}">
+                                        <i class="fas fa-star"></i>
+                                        <span th:text="${#numbers.formatDecimal(movie.rating, 1, 1)} + '/10'">8.5/10</span>
+                                    </div>
+                                    <div class="movie-duration">
+                                        <i class="far fa-clock"></i>
+                                        <span th:text="${movie.duration} + ' phút'">120 phút</span>
+                                    </div>
+                                    <div class="movie-genre">
+                                        <i class="fas fa-tag"></i>
+                                        <span th:text="${movie.genre}">Thể loại</span>
+                                    </div>
                                 </div>
                                 <div class="movie-actions">
                                     <button class="btn-primary" th:attr="data-id=${movie.id}" onclick="viewMovieDetail(this.dataset.id)">
                                         <i class="fas fa-play"></i> Đặt vé ngay
                                     </button>
+                                    <button class="btn-secondary" th:if="${movie.trailerUrl != null and movie.trailerUrl != ''}" 
+                                            th:attr="data-trailer=${movie.trailerUrl}" onclick="showTrailer(this.dataset.trailer)">
+                                        <i class="fas fa-play-circle"></i> Xem trailer
+                                    </button>
+                                </div>
+                            </div>
 <!--                                    <button class="btn-secondary" th:attr="data-id=${movie.title}" onclick="showTrailer(this.dataset.title)">-->
 <!--                                        <i class="fas fa-play-circle"></i> Xem trailer-->
 <!--                                    </button>-->
@@ -127,7 +142,10 @@
                             <p class="movie-genre" th:text="${movie.genre}">Thể loại</p>
                             <div class="movie-meta">
                                 <span class="duration" th:text="${movie.duration + ' phút'}">120 phút</span>
-<!--                                <span class="rating" th:if="${movie.rating}">-->
+                                <span class="rating" th:if="${movie.rating > 0}">
+                                    <i class="fas fa-star"></i>
+                                    <span th:text="${#numbers.formatDecimal(movie.rating, 1, 1)}">8.5</span>
+                                </span>
 <!--                                    <i class="fas fa-star"></i>-->
 <!--                                    <span th:text="${movie.rating}">8.5</span>-->
 <!--                                </span>-->
@@ -166,6 +184,10 @@
                             <p class="movie-genre" th:text="${movie.genre}">Thể loại</p>
                             <div class="movie-meta">
                                 <span class="duration" th:text="${movie.duration + ' phút'}">120 phút</span>
+                                <span class="rating" th:if="${movie.rating > 0}">
+                                    <i class="fas fa-star"></i>
+                                    <span th:text="${#numbers.formatDecimal(movie.rating, 1, 1)}">8.5</span>
+                                </span>
                                 <span class="release-info" th:text="${'Ngày ' + #temporals.format(movie.beginDay, 'dd-MM')}">
                                 </span>
                             </div>

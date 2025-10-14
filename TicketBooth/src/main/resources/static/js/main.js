@@ -139,10 +139,88 @@ function showMovieCategory(categoryId) {
 }
 
 // Movie interaction functions
-function showTrailer(movieId) {
-    // Implement trailer modal or redirect
-    console.log('Show trailer for movie ID:', movieId);
-    // You can implement a modal here or redirect to trailer URL
+function showTrailer(trailerUrl) {
+    if (!trailerUrl) {
+        alert('Trailer không có sẵn');
+        return;
+    }
+    
+    // Create modal for trailer
+    const modal = document.createElement('div');
+    modal.className = 'trailer-modal';
+    modal.innerHTML = `
+        <div class="trailer-modal-content">
+            <span class="trailer-close" onclick="closeTrailer()">&times;</span>
+            <div class="trailer-container">
+                <iframe src="${trailerUrl}" 
+                        frameborder="0" 
+                        allowfullscreen
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                </iframe>
+            </div>
+        </div>
+    `;
+    
+    // Add styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .trailer-modal {
+            display: block;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        .trailer-modal-content {
+            position: relative;
+            margin: 5% auto;
+            width: 80%;
+            max-width: 800px;
+        }
+        .trailer-close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: -40px;
+            top: -40px;
+        }
+        .trailer-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        }
+        .trailer-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    `;
+    
+    document.head.appendChild(style);
+    document.body.appendChild(modal);
+    
+    // Close on outside click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeTrailer();
+        }
+    });
+}
+
+function closeTrailer() {
+    const modal = document.querySelector('.trailer-modal');
+    if (modal) {
+        modal.remove();
+    }
 }
 
 function notifyMovie(movieId) {

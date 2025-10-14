@@ -9,6 +9,7 @@ import com.team7.ticket_booth.model.Order;
 import com.team7.ticket_booth.model.Payment;
 import com.team7.ticket_booth.model.Show;
 import com.team7.ticket_booth.model.User;
+import com.team7.ticket_booth.model.enums.Status;
 import com.team7.ticket_booth.service.*;
 import com.team7.ticket_booth.service.user.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,14 @@ public class BookingFacade {
         paymentRequestDTO.setMethod(dto.getMethod());
         Payment payment = paymentService.createPayment(paymentRequestDTO);
         return new PaymentResponseDTO(payment, totalCost);
+    }
+
+    @Transactional
+    public void checkOrder(UUID orderId) {
+        Payment payment = paymentService.getByOdrerId(orderId);
+        if(payment.getStatus().equals(Status.PENDING)){
+            orderService.deleteOrder(orderId);
+        }
     }
 
 

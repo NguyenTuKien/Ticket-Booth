@@ -12,8 +12,10 @@ public class MovieResponseDTO {
     private String title;
     private String genre;
     private String thumbnailUrl;
+    private String trailerUrl;
     private String description;
     private int duration;
+    private float rating;
     private LocalDate beginDay;
     private LocalDate endDay;
 
@@ -22,7 +24,9 @@ public class MovieResponseDTO {
         this.title = movie.getTitle();
         this.genre = (movie.getGenre() != null) ? movie.getGenre().getDescription() : null;
         this.thumbnailUrl = movie.getThumbnailUrl();
+        this.trailerUrl = movie.getTrailerUrl();
         this.description = movie.getDescription();
+        this.rating = movie.getRating();
         this.duration = movie.getDuration();
         this.beginDay = movie.getBeginDay();
         this.endDay = movie.getEndDay();

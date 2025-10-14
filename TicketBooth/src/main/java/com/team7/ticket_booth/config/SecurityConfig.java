@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Form login và public pages
                         .requestMatchers("/", "/home", "/login", "/signup", "/css/**", "/js/**", "/images/**", "/showtime", "/reservation").permitAll()
+                        // VNPay return & IPN callbacks
+                        .requestMatchers("/payment_return", "/api/v1/payments/vnpay-ipn").permitAll()
                         // API public
                         .requestMatchers("/api/v1/auth/**", "/api/v1/movies/**", "api/v1/prices/").permitAll()
                         // API orders và payments (cần authenticated)

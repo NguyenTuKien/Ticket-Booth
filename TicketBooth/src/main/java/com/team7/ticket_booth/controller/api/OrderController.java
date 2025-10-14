@@ -31,4 +31,10 @@ public class OrderController {
     public void cancelTickets(@RequestBody List<UUID> ticketIds) {
         bookingFacade.cancelTicket(ticketIds);
     }
+
+    @PutMapping("/check")
+    public void checkOrder(@RequestParam UUID orderId) {
+        bookingFacade.checkOrder(orderId);
+    }
+
 }

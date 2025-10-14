@@ -33,11 +33,17 @@ public class Movie {
     @Column(name = "thumbnailUrl", length = 500)
     private String thumbnailUrl;
 
+    @Column (name = "trailerUrl", length = 500)
+    private String trailerUrl;
+
     @Column(name = "description", columnDefinition = "NTEXT")
     private String description;
 
     @Column(name = "duration", nullable = false)
     private int duration; // duration in minutes
+
+    @Column (name = "rating")
+    private float rating;
 
     @Column(name = "releaseDay")
     private LocalDate beginDay;

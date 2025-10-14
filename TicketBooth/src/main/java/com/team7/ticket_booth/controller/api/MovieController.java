@@ -36,10 +36,21 @@ public class MovieController {
         return movieService.getMoviesByGenre(genre, page);
     }
 
+    @GetMapping("/top-rated")
+    public List<MovieResponseDTO> getTopRatedMovies(@RequestParam int page){
+        return movieService.getHighestRatedMovies(page);
+    }
+
     @GetMapping("/current")
     public List<MovieResponseDTO> getCurrentMovies(@RequestParam int page){
         LocalDate now = LocalDate.now();
         return movieService.getCurrentMovies(now, page);
+    }
+
+    @GetMapping("/upcoming")
+    public List<MovieResponseDTO> getUpcomingMovies(@RequestParam int page){
+        LocalDate now = LocalDate.now();
+        return movieService.getUpcomingMovies(now, page);
     }
 
     @GetMapping("/search")

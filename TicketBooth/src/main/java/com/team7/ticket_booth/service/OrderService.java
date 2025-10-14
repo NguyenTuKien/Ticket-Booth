@@ -89,4 +89,10 @@ public class OrderService {
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
         return orderRepository.findOrderSuccessByUser(user);
     }
+
+    public List<Ticket> getTicketsByOrderId(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
+        return ticketRepository.findByOrderId(order.getId());
+    }
 }
