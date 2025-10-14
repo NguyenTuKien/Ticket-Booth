@@ -1,0 +1,22 @@
+# render.yaml (để Render hiểu và triển khai)
+services:
+  # 1. Dịch vụ Backend (dịch từ 'web')
+  - type: web
+    name: my-backend-app # Đặt tên cho dịch vụ của bạn
+    env: docker # Báo cho Render biết sẽ build từ Dockerfile
+    
+    # Render sẽ tự động gán cổng, không cần khai báo 'ports'
+    
+    # Khai báo biến môi trường
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: my-database # Tên của dịch vụ database bên dưới
+          property: connectionString # Render tự tạo chuỗi kết nối an toàn
+
+  # 2. Dịch vụ Database (dịch từ 'db')
+  - type: psql # psql là viết tắt của PostgreSQL trên Render
+    name: my-database # Đặt tên cho database
+    # Bạn không cần khai báo user, password, dbname ở đây.
+    # Render sẽ tự tạo và cung cấp qua chuỗi kết nối ở trên.
+    # Render cũng tự quản lý lưu trữ (volumes) cho bạn.
